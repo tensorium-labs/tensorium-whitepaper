@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tensorium Whitepaper — PoW Blockchain for Open Mining</title>
+  <meta name="description" content="Tensorium is a Proof-of-Work Layer 1 blockchain with SHA256d consensus, GPU-first mainnet direction, and transparent tokenomics.">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬡</text></svg>">
+</head>
+<body>
+<div class="layout">
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <a href="/" class="sidebar-logo">
+    <div class="logo-icon">⬡</div>
+    <div>
+      <div class="logo-text">Tensorium</div>
+      <div class="logo-sub">Whitepaper v1.0</div>
+    </div>
+  </a>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section">Document</div>
+    <a href="#abstract"      class="nav-link active"><span class="nav-num">—</span> Abstract</a>
+    <a href="#introduction"  class="nav-link"><span class="nav-num">1</span> Introduction</a>
+    <a href="#architecture"  class="nav-link"><span class="nav-num">2</span> Architecture</a>
+    <a href="#consensus"     class="nav-link"><span class="nav-num">3</span> Consensus</a>
+    <a href="#tokenomics"    class="nav-link"><span class="nav-num">4</span> Tokenomics</a>
+    <a href="#mining"        class="nav-link"><span class="nav-num">5</span> Mining</a>
+    <a href="#network"       class="nav-link"><span class="nav-num">6</span> P2P Network</a>
+    <a href="#security"      class="nav-link"><span class="nav-num">7</span> Security</a>
+    <a href="#roadmap"       class="nav-link"><span class="nav-num">8</span> Roadmap</a>
+    <a href="#disclaimer"    class="nav-link"><span class="nav-num">—</span> Disclaimer</a>
+
+    <div class="nav-section" style="margin-top:16px">Resources</div>
+    <a href="https://docs.tensoriumlabs.com"            class="nav-link" target="_blank"><span class="nav-num">📖</span> Docs</a>
+    <a href="https://pooltxm.tensoriumlabs.com"         class="nav-link" target="_blank"><span class="nav-num">◈</span> Pool</a>
+    <a href="https://t.me/+QOsnpSdhDGZkZGQ1"           class="nav-link" target="_blank"><span class="nav-num">💬</span> Telegram</a>
+    <a href="https://explorer.tensoriumlabs.com"        class="nav-link" target="_blank"><span class="nav-num">🔍</span> Explorer</a>
+    <a href="https://github.com/rygroup-dev/tensorium-core/blob/main/RISK_DISCLOSURE.md" class="nav-link" target="_blank"><span class="nav-num">⚖</span> Risk</a>
+    <a href="https://github.com/rygroup-dev/tensorium-core" class="nav-link" target="_blank"><span class="nav-num">⌨</span> GitHub</a>
+  </nav>
+
+  <div class="sidebar-footer">
+    © 2025 Tensorium Labs<br>
+    <a href="/mining.html">Mining Guide</a> · <a href="https://explorer.tensoriumlabs.com" target="_blank">Explorer</a>
+  </div>
+</aside>
+
+<!-- Main -->
+<div class="main">
+  <div class="page-nav">
+    <span class="page-nav-title">Tensorium Whitepaper</span>
+    <div class="page-nav-links">
+      <a href="/" class="current">Whitepaper</a>
+      <a href="/mining.html">Mining Guide</a>
+      <a href="https://explorer.tensoriumlabs.com" target="_blank">Explorer ↗</a>
+      <a href="https://github.com/rygroup-dev/tensorium-core" target="_blank">GitHub ↗</a>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- Header -->
+    <div class="doc-header">
+      <div class="doc-tag">⬡ Technical Whitepaper</div>
+      <h1 class="doc-title">Tensorium: A Proof-of-Work Blockchain for Open, GPU-First Mining</h1>
+      <p class="doc-subtitle">A transparent, community-minable Layer 1 blockchain with SHA256d consensus, UTXO model, and a fair GPU-first mainnet direction.</p>
+      <div class="doc-meta">
+        <span>📅 Version 1.0 — May 2025</span>
+        <span>🔗 Testnet: <code>tensorium-testnet-0</code></span>
+        <span>💎 Ticker: <code>TXM</code></span>
+        <span>🏗 Status: Phase 8 Pre-Launch</span>
+      </div>
+    </div>
+
+    <!-- Abstract -->
+    <div class="abstract" id="abstract">
+      <strong>Abstract.</strong> Tensorium is an open-source Proof-of-Work Layer 1 blockchain implemented in Rust. It uses SHA256d as its consensus algorithm, a UTXO-based ledger, and a deterministic halving emission schedule capped at 33,000,000 TXM. The network is designed for fair-launch community mining, starting with CPU-accessible bootstrap mining on testnet and targeting GPU-first mining on mainnet. This document describes the technical architecture, consensus mechanism, tokenomics, P2P protocol, and development roadmap of the Tensorium network.
+    </div>
+
+    <!-- 1. Introduction -->
+    <div class="section" id="introduction">
+      <h2 class="section-title"><span class="section-num">1</span> Introduction</h2>
+
+      <h3>1.1 Motivation</h3>
+      <p>Proof-of-Work blockchains have proven to be the most resilient consensus mechanism in practice. Bitcoin's 15-year track record demonstrates that PoW provides objective security without relying on stake concentration or trusted validator sets. However, most modern PoW chains are dominated by ASIC manufacturers, leaving community miners — particularly GPU operators — with few viable options.</p>
+      <p>Tensorium is built to address this: a clean, open PoW chain where GPU miners are first-class participants, the emission schedule is transparent and non-inflationary, and the codebase is fully open-source with no hidden allocation beyond a declared founder allocation.</p>
+
+      <h3>1.2 Design Principles</h3>
+      <ul>
+        <li><strong>Fair launch over hype.</strong> Public testnet and mainnet-candidate preparation run before mainnet. No private allocation beyond the declared 1,000,000 TXM founder reserve.</li>
+        <li><strong>GPU-first mining.</strong> The current public testnet includes CUDA mining at GPU-first difficulty. Mainnet-candidate launch remains gated on Phase 8 pre-launch checks.</li>
+        <li><strong>Open source, always.</strong> All node, miner, and wallet code is published under an open license.</li>
+        <li><strong>Self-custody.</strong> Users control their own keys. No custodial wallets.</li>
+        <li><strong>Security before speed.</strong> Consensus rules are frozen before mainnet. No shortcuts.</li>
+      </ul>
+
+      <h3>1.3 Scope of This Document</h3>
+      <p>This whitepaper covers the protocol design, consensus mechanism, tokenomics, and roadmap of the Tensorium network as of its public testnet launch. It is a living document and will be updated as the protocol evolves toward mainnet.</p>
+    </div>
+
+    <!-- 2. Architecture -->
+    <div class="section" id="architecture">
+      <h2 class="section-title"><span class="section-num">2</span> System Architecture</h2>
+
+      <h3>2.1 Components</h3>
+      <p>The Tensorium software stack consists of four independently runnable binaries:</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Binary</th><th>Role</th><th>Language</th></tr></thead>
+          <tbody>
+            <tr><td><code>tensorium-node</code></td><td>Full node — validates blocks, maintains chain state, exposes RPC, participates in P2P</td><td>Rust</td></tr>
+            <tr><td><code>txmminer</code></td><td>CPU miner — fetches block template, finds valid nonce, submits via RPC</td><td>Rust</td></tr>
+            <tr><td><code>txmwallet</code></td><td>CLI wallet — generates keys, signs transactions, checks balance</td><td>Rust</td></tr>
+            <tr><td><em>txmminer-cuda</em></td><td>GPU miner (Phase 6) — CUDA-accelerated SHA256d mining</td><td>Rust + CUDA</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>2.2 Block Structure</h3>
+      <p>Each block consists of a header and a list of transactions:</p>
+
+      <pre>{
+  "header": {
+    "version":           1,
+    "chain_id":          "tensorium-testnet-0",
+    "height":            uint64,
+    "previous_hash":     Hash256,
+    "merkle_root":       Hash256,
+    "timestamp_seconds": uint64,
+    "leading_zero_bits": uint8,     // current difficulty
+    "nonce":             uint64
+  },
+  "transactions": [ Transaction, ... ]
+}</pre>
+
+      <p>The block hash is computed as <code>SHA256(SHA256(header_bytes))</code> — double-SHA256, identical to Bitcoin's block hashing scheme. A block is valid if its hash has at least <code>leading_zero_bits</code> leading zero bits.</p>
+
+      <h3>2.3 Transaction Structure</h3>
+      <p>Transactions follow a UTXO (Unspent Transaction Output) model:</p>
+      <pre>{
+  "id":      Hash256,            // SHA256d of transaction data
+  "inputs":  [ { prev_txid, output_index, signature_script } ],
+  "outputs": [ { address, value_atoms } ],
+  "payload": bytes               // coinbase: encodes height + reward + miner
+}</pre>
+
+      <p>Coinbase transactions (block rewards) have empty inputs. All other transactions must reference existing UTXOs and provide valid secp256k1 ECDSA signatures.</p>
+
+      <h3>2.4 UTXO Set</h3>
+      <p>The node maintains a UTXO set that is updated with each accepted block. Coinbase UTXOs are subject to a <strong>100-block maturity</strong> requirement before they can be spent, providing protection against reorgs invalidating mining rewards.</p>
+
+      <h3>2.5 Chain State</h3>
+      <p>Chain state is persisted to a JSON file (<code>tensorium-testnet-state.json</code> by default). The canonical chain is the one with the greatest cumulative work, where block work is defined as <code>2^leading_zero_bits</code>.</p>
+    </div>
+
+    <!-- 3. Consensus -->
+    <div class="section" id="consensus">
+      <h2 class="section-title"><span class="section-num">3</span> Consensus Mechanism</h2>
+
+      <h3>3.1 Proof-of-Work</h3>
+      <p>Tensorium uses <strong>SHA256d (double-SHA256)</strong> as its Proof-of-Work function. To mine a valid block, a miner must find a 64-bit nonce such that:</p>
+      <pre>leading_zero_bits( SHA256( SHA256( serialize(header) ) ) ) ≥ D</pre>
+      <p>where <code>D</code> is the current difficulty in leading zero bits. The expected number of hash attempts per valid block is <code>2^D</code>.</p>
+
+      <h3>3.2 Difficulty Adjustment</h3>
+      <p>Difficulty is adjusted every <strong>60 blocks</strong> (one window) to target a 60-second block time:</p>
+
+      <pre>actual_time   = timestamp(block_N) - timestamp(block_{N-60})
+target_time   = 60 blocks × 60 seconds = 3,600 seconds
+ratio         = actual_time / target_time
+ratio         = clamp(ratio, 0.25, 4.0)     // max 4× adjustment per window
+
+new_difficulty = old_difficulty + 1   if ratio &lt; 1.0  (blocks too fast)
+               = old_difficulty - 1   if ratio &gt; 1.0  (blocks too slow)
+               = old_difficulty        if ratio == 1.0</pre>
+
+      <p>The ±1 bit per window cap prevents sudden difficulty spikes that could stall the chain or enable rapid mining attacks. Difficulty is bounded between <code>min_leading_zero_bits</code> (20 for testnet) and <code>max_leading_zero_bits</code> (40 for testnet).</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Parameter</th><th>Testnet</th><th>Mainnet Candidate</th></tr></thead>
+          <tbody>
+            <tr><td>Initial difficulty</td><td>26 bits</td><td>36 bits</td></tr>
+            <tr><td>Min difficulty</td><td>20 bits</td><td>28 bits</td></tr>
+            <tr><td>Max difficulty</td><td>40 bits</td><td>56 bits</td></tr>
+            <tr><td>Adjustment window</td><td>60 blocks</td><td>120 blocks</td></tr>
+            <tr><td>Max adjustment</td><td>±1 bit/window</td><td>±1 bit/window</td></tr>
+            <tr><td>Target block time</td><td>60 seconds</td><td>60 seconds</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>3.3 Fork Choice Rule</h3>
+      <p>When competing chain tips exist, the canonical chain is determined by greatest cumulative work:</p>
+      <pre>cumulative_work(chain) = Σ  2^(leading_zero_bits_i)  for each block i</pre>
+      <p>When a higher-work chain is received, the node performs a <strong>chain reorganization</strong>: it identifies the common ancestor, reverts blocks from the old tip back to the fork point, and applies the new chain's blocks. Reorg depth is logged to allow monitoring.</p>
+
+      <h3>3.4 Genesis Block</h3>
+      <p>The public testnet genesis block has a fixed timestamp (<code>1,748,649,600</code>) ensuring every node that runs <code>tensorium-node init</code> produces the identical genesis block hash:</p>
+      <pre>Genesis hash: 00000035d8a99c0900fec5daa3ef5a7c2d71c7140e473d239a24b0dd4cd7f6c3
+Timestamp:    2025-05-30 16:00:00 UTC
+Nonce:        95,202,247
+Difficulty:   26 bits</pre>
+      <p>The mainnet-candidate genesis is also hardcoded in <code>v0.3.1-mainnet-candidate</code> for pre-launch validation:</p>
+      <pre>Mainnet-candidate genesis hash: 0000000000d61e99b9e2530609632b399d0f0b538c2d54daa1dddbfe28ea08dc
+Timestamp:                     2026-06-01 00:00:00 UTC
+Nonce:                         56,167,663,277
+Chain ID:                      tensorium-mainnet-candidate-0</pre>
+    </div>
+
+    <!-- 4. Tokenomics -->
+    <div class="section" id="tokenomics">
+      <h2 class="section-title"><span class="section-num">4</span> Tokenomics</h2>
+
+      <h3>4.1 Supply Summary</h3>
+      <div class="spec-grid">
+        <div class="spec-item">
+          <div class="spec-label">Max Supply</div>
+          <div class="spec-value">33,000,000</div>
+          <div class="spec-sub">TXM total, hard cap</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Mining Allocation</div>
+          <div class="spec-value">32,000,000</div>
+          <div class="spec-sub">TXM (96.97%) via block rewards</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Founder Allocation</div>
+          <div class="spec-value">1,000,000</div>
+          <div class="spec-sub">TXM (3.03%) — declared, no hidden premine</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Initial Block Reward</div>
+          <div class="spec-value">15.23557865</div>
+          <div class="spec-sub">TXM per block (Era 1)</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Block Time</div>
+          <div class="spec-value">60 seconds</div>
+          <div class="spec-sub">target (difficulty-adjusted)</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Halving Interval</div>
+          <div class="spec-value">1,051,200 blocks</div>
+          <div class="spec-sub">≈ 2 years per era</div>
+        </div>
+      </div>
+
+      <h3>4.2 Emission Schedule</h3>
+      <p>Block rewards halve every 1,051,200 blocks (~2 years) across 10 eras. After era 10, no new TXM is issued — the network is sustained by transaction fees.</p>
+
+      <div class="emission-bars">
+        <div class="era-row" style="font-size:11px;color:var(--text3);font-weight:600;border-bottom:1px solid var(--border2)">
+          <span>ERA</span><span>REWARD / BLOCK</span><span></span><span>ERA TOTAL</span>
+        </div>
+        <div class="era-row"><span class="era-num">1</span><span class="era-reward">15.23557865</span><div class="era-bar-wrap"><div class="era-bar" style="width:100%"></div></div><span class="era-pct">~16.02M TXM</span></div>
+        <div class="era-row"><span class="era-num">2</span><span class="era-reward">7.61778932</span><div class="era-bar-wrap"><div class="era-bar" style="width:50%"></div></div><span class="era-pct">~8.01M TXM</span></div>
+        <div class="era-row"><span class="era-num">3</span><span class="era-reward">3.80889466</span><div class="era-bar-wrap"><div class="era-bar" style="width:25%"></div></div><span class="era-pct">~4.01M TXM</span></div>
+        <div class="era-row"><span class="era-num">4</span><span class="era-reward">1.90444733</span><div class="era-bar-wrap"><div class="era-bar" style="width:12.5%"></div></div><span class="era-pct">~2.00M TXM</span></div>
+        <div class="era-row"><span class="era-num">5</span><span class="era-reward">0.95222366</span><div class="era-bar-wrap"><div class="era-bar" style="width:6.25%"></div></div><span class="era-pct">~1.00M TXM</span></div>
+        <div class="era-row"><span class="era-num">6</span><span class="era-reward">0.47611183</span><div class="era-bar-wrap"><div class="era-bar" style="width:3.13%"></div></div><span class="era-pct">~500K TXM</span></div>
+        <div class="era-row"><span class="era-num">7</span><span class="era-reward">0.23805591</span><div class="era-bar-wrap"><div class="era-bar" style="width:1.56%"></div></div><span class="era-pct">~250K TXM</span></div>
+        <div class="era-row"><span class="era-num">8</span><span class="era-reward">0.11902795</span><div class="era-bar-wrap"><div class="era-bar" style="width:0.78%"></div></div><span class="era-pct">~125K TXM</span></div>
+        <div class="era-row"><span class="era-num">9</span><span class="era-reward">0.05951397</span><div class="era-bar-wrap"><div class="era-bar" style="width:0.39%"></div></div><span class="era-pct">~63K TXM</span></div>
+        <div class="era-row"><span class="era-num">10</span><span class="era-reward">0.02975699</span><div class="era-bar-wrap"><div class="era-bar" style="width:0.2%"></div></div><span class="era-pct">~31K TXM</span></div>
+      </div>
+
+      <div class="callout callout-info" style="margin-top:16px">
+        <span class="callout-icon">ℹ</span>
+        <div class="callout-body"><strong>50% mined in Era 1.</strong> This follows Bitcoin's emission model — most coins are distributed early, incentivizing early miners and securing the network bootstrap. By year 4 (~Era 2), ~75% of mining supply will have been distributed.</div>
+      </div>
+
+      <h3>4.3 Founder Allocation</h3>
+      <p>1,000,000 TXM (3.03% of total supply) is reserved for the founding team. This allocation:</p>
+      <ul>
+        <li>Is declared publicly in the mainnet-candidate genesis block and codebase</li>
+        <li>Is separate from the 32,000,000 TXM mining allocation</li>
+        <li>Uses a 24-month voluntary social/manual lock: no more than 10% may move in any single calendar month for the first 24 months</li>
+        <li>Is <strong>not</strong> locked by L1 consensus; the lock is a published social commitment</li>
+        <li>Has no impact on block validation or consensus rules</li>
+      </ul>
+
+      <h3>4.4 Official Pool Fee</h3>
+      <p>The official/reference pool charges a transparent <strong>5%</strong> pool fee at payout accounting level. This is not a protocol-level miner tax. Solo mining remains fee-free at the consensus layer.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Policy</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Pool website</td><td><a href="https://pooltxm.tensoriumlabs.com" target="_blank">pooltxm.tensoriumlabs.com</a></td></tr>
+            <tr><td>Pool fee</td><td>5% / 500 bps</td></tr>
+            <tr><td>Pool treasury</td><td><code>txm10wa2dazhn2yqwwxkm4aegvzjq55hj9m2jlznt9</code></td></tr>
+            <tr><td>Accounting</td><td>gross reward - pool fee = net miner payout</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>4.5 Transaction Fees</h3>
+      <p>After era 10 (~year 2045), block rewards cease. The network is sustained entirely by transaction fees included in blocks by miners. Fee market mechanics will be refined during testnet based on observed usage patterns.</p>
+    </div>
+
+    <!-- 5. Mining -->
+    <div class="section" id="mining">
+      <h2 class="section-title"><span class="section-num">5</span> Mining</h2>
+
+      <h3>5.1 Mining Architecture</h3>
+      <p>Mining in Tensorium is a two-step process:</p>
+      <ol>
+        <li><strong>Get block template</strong> — the miner requests a candidate block from the node RPC (<code>GET /getblocktemplate/&lt;address&gt;</code>). The template includes pending mempool transactions and the current difficulty target.</li>
+        <li><strong>Find valid nonce</strong> — the miner iterates the 64-bit nonce field, computing SHA256d of the block header for each value, until a hash with sufficient leading zero bits is found.</li>
+        <li><strong>Submit</strong> — the mined block is submitted to the node via <code>POST /submitblock</code>, which validates, stores, and broadcasts it to peers.</li>
+      </ol>
+
+      <h3>5.2 Solo Mining</h3>
+      <p>The <code>txmminer</code> binary provides multi-threaded CPU mining for protocol testing. Practical public testnet mining uses the CUDA miner at GPU-first difficulty.</p>
+
+      <pre>txmminer &lt;rpc&gt; &lt;address&gt; [threads]
+
+# Examples:
+txmminer 127.0.0.1:23332 txm1youraddress          # auto-detect cores
+txmminer 127.0.0.1:23332 txm1youraddress 8         # use 8 threads</pre>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Hardware</th><th>Est. Hashrate</th><th>~Block Time (diff 26)</th></tr></thead>
+          <tbody>
+            <tr><td>Single CPU core</td><td>3–8 MH/s</td><td>10–25 seconds</td></tr>
+            <tr><td>4-core CPU</td><td>15–30 MH/s</td><td>3–5 seconds</td></tr>
+            <tr><td>16-core CPU</td><td>50–120 MH/s</td><td>&lt; 2 seconds</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-warn">
+        <span class="callout-icon">⚠</span>
+        <div class="callout-body"><strong>Testnet only.</strong> Testnet TXM has no monetary value. Current public testnet mining is GPU-first at 36 bits; CPU mining remains useful for local validation.</div>
+      </div>
+
+      <h3>5.3 GPU-First Mining</h3>
+      <p>Tensorium's mining direction is GPU-first. A CUDA-accelerated miner (<code>txmminer-cuda</code>) is available for the public testnet and mainnet-candidate validation.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>GPU</th><th>Est. SHA256d Hashrate</th><th>~Block Time (diff 36)</th></tr></thead>
+          <tbody>
+            <tr><td>RTX 3060</td><td>400–600 MH/s</td><td>115–180 seconds</td></tr>
+            <tr><td>RTX 3080</td><td>900–1,400 MH/s</td><td>50–75 seconds</td></tr>
+            <tr><td>RTX 4070</td><td>700–1,000 MH/s</td><td>70–95 seconds</td></tr>
+            <tr><td>RTX 4090</td><td>2,000–3,000 MH/s</td><td>25–35 seconds</td></tr>
+            <tr><td>RTX 5090</td><td>3,000–4,500 MH/s</td><td>15–25 seconds</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>At difficulty 36–38 bits with a small GPU testnet (3–5 cards), average block time converges toward the 60-second target through difficulty auto-adjustment. Datacenter GPUs (H100, H200) have <strong>no meaningful advantage</strong> over high-end gaming GPUs for SHA256d — the algorithm is compute-bound and does not benefit from HBM bandwidth.</p>
+
+      <h3>5.4 Mining Pool Support</h3>
+      <p>The official/reference pool is live at <a href="https://pooltxm.tensoriumlabs.com" target="_blank">pooltxm.tensoriumlabs.com</a>. It exposes a miner RPC endpoint at <code>pooltxm.tensoriumlabs.com:23336</code>, records payout accounting, discloses the 5% fee, and shows gross reward, fee, and net miner payout.</p>
+    </div>
+
+    <!-- 6. Network -->
+    <div class="section" id="network">
+      <h2 class="section-title"><span class="section-num">6</span> P2P Network</h2>
+
+      <h3>6.1 Protocol</h3>
+      <p>Tensorium uses a custom lightweight P2P protocol over TCP. All messages are newline-delimited JSON. Each connection begins with a bidirectional handshake:</p>
+      <pre>// Hello (both sides send simultaneously)
+{
+  "protocol":  "tensorium-p2p",
+  "version":   1,
+  "chain_id":  "tensorium-testnet-0",
+  "node_id":   "node-name",
+  "height":    uint64,
+  "tip_hash":  Hash256
+}</pre>
+
+      <p>After handshake, the following messages are supported:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Message</th><th>Direction</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td><code>NewBlock</code></td><td>Push</td><td>Broadcast newly mined block to peer</td></tr>
+            <tr><td><code>Ack</code></td><td>Response</td><td>Block accepted at given height</td></tr>
+            <tr><td><code>Reject</code></td><td>Response</td><td>Block rejected with reason</td></tr>
+            <tr><td><code>NewTx</code></td><td>Push</td><td>Broadcast unconfirmed transaction</td></tr>
+            <tr><td><code>TxAck</code></td><td>Response</td><td>Transaction accepted into mempool</td></tr>
+            <tr><td><code>GetBlocks</code></td><td>Request</td><td>Request blocks from a given height</td></tr>
+            <tr><td><code>Blocks</code></td><td>Response</td><td>Batch of up to 50 blocks</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>6.2 Peer Discovery</h3>
+      <p>The current implementation uses static peer configuration via the <code>TENSORIUM_PEERS</code> environment variable plus built-in default seeds in the node binary. DNS seed support remains a Phase 8/mainnet-candidate infrastructure item.</p>
+
+      <h3>6.3 Peer Ban Policy</h3>
+      <p>Nodes maintain a score-based ban list to protect against malicious peers:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Offense</th><th>Score</th><th>Bans at</th></tr></thead>
+          <tbody>
+            <tr><td>Wrong chain_id / protocol in handshake</td><td>100</td><td>Instant (100)</td></tr>
+            <tr><td>Invalid block (bad PoW, tampered data)</td><td>20</td><td>5 blocks</td></tr>
+            <tr><td>Invalid transaction (bad signature)</td><td>10</td><td>10 txs</td></tr>
+            <tr><td>Unparseable message</td><td>2</td><td>50 messages</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Bans last 1 hour and are persisted to disk. Nodes can be manually unbanned via <code>tensorium-node unban &lt;ip&gt;</code>.</p>
+
+      <h3>6.4 Network Ports</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Port</th><th>Protocol</th><th>Purpose</th><th>Exposure</th></tr></thead>
+          <tbody>
+            <tr><td><code>23333</code></td><td>TCP</td><td>P2P node communication</td><td>Public — open in firewall</td></tr>
+            <tr><td><code>23332</code></td><td>TCP/HTTP</td><td>RPC API</td><td>Localhost only — do not expose</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 7. Security -->
+    <div class="section" id="security">
+      <h2 class="section-title"><span class="section-num">7</span> Security Considerations</h2>
+
+      <h3>7.1 51% Attack Resistance</h3>
+      <p>As with all PoW chains, Tensorium is vulnerable to 51% hash power attacks. During testnet, this risk is accepted — testnet has no economic value. For mainnet, the GPU-first design means an attacker would need to acquire a large GPU farm, which is economically costly and visible. The ±1 bit difficulty cap prevents rapid hashrate manipulation.</p>
+
+      <h3>7.2 Replay Protection</h3>
+      <p>The <code>chain_id</code> field is included in every block header and validated on every P2P handshake. Transactions signed for one network are invalid on another.</p>
+
+      <h3>7.3 Timestamp Manipulation</h3>
+      <p>Block timestamps must not exceed the node's local time by more than 2 hours. This prevents difficulty manipulation via far-future timestamps.</p>
+
+      <h3>7.4 Wallet Security</h3>
+      <p>The <code>txmwallet</code> binary uses <strong>Argon2id</strong> key derivation and <strong>ChaCha20-Poly1305</strong> authenticated encryption to protect private keys at rest. Private keys are never transmitted over the network. Users are responsible for backing up their encrypted wallet files.</p>
+
+      <div class="callout callout-warn">
+        <span class="callout-icon">⚠</span>
+        <div class="callout-body"><strong>Testnet warning.</strong> This software has not undergone a third-party security audit. Do not use testnet code for mainnet, real funds, or production mining. A security audit is required before mainnet launch.</div>
+      </div>
+
+      <h3>7.5 Pre-Mainnet Requirements</h3>
+      <ul>
+        <li>Extended soak test of mainnet-candidate node and pool services</li>
+        <li>Stable GPU-first public testnet without consensus bugs</li>
+        <li>Final license decision and documentation review</li>
+        <li>Published risk disclosure, founder lock policy, pool fee policy, and genesis parameters before public launch</li>
+      </ul>
+    </div>
+
+    <!-- 8. Roadmap -->
+    <div class="section" id="roadmap">
+      <h2 class="section-title"><span class="section-num">8</span> Roadmap</h2>
+
+      <div class="roadmap">
+        <div class="phase">
+          <div class="phase-dot done">0</div>
+          <div>
+            <div class="phase-title">Phase 0 — Planning <span class="phase-tag done">Done</span></div>
+            <div class="phase-desc">Tokenomics finalized, chain parameters locked, repository created.</div>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-dot done">1</div>
+          <div>
+            <div class="phase-title">Phase 1 — Local Chain <span class="phase-tag done">Done</span></div>
+            <div class="phase-desc">Block structure, genesis block, chain validation, RPC, CPU miner, UTXO model.</div>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-dot done">2</div>
+          <div>
+            <div class="phase-title">Phase 2 — Wallet <span class="phase-tag done">Done</span></div>
+            <div class="phase-desc">Key generation (secp256k1), Argon2id encrypted storage, transaction signing and broadcast.</div>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-dot done">3</div>
+          <div>
+            <div class="phase-title">Phase 3 — P2P Testnet <span class="phase-tag done">Done</span></div>
+            <div class="phase-desc">Handshake, block/tx broadcast, chain sync, fork choice, peer ban system. Tested on VPS.</div>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-dot active">4</div>
+          <div>
+            <div class="phase-title">Phase 4 — Public Testnet <span class="phase-tag done">Done</span></div>
+            <div class="phase-desc">Public seed node, binary releases, installer script, block explorer (explorer.tensoriumlabs.com), mining documentation, multi-threaded CPU miner. Community bug reports open.</div>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-dot pending">5</div>
+          <div>
+            <div class="phase-title">Phase 5 — Stabilization <span class="phase-tag done">Done</span></div>
+            <div class="phase-desc">Chain reorg testing, spam resistance, wallet recovery, node restart resilience, peer discovery, testnet running ≥ 4 weeks stable. Consensus rules frozen.</div>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-dot pending">6</div>
+          <div>
+            <div class="phase-title">Phase 6 — GPU-First Testnet <span class="phase-tag done">Done</span></div>
+            <div class="phase-desc">CUDA miner (txmminer-cuda), difficulty raised to 36 bits, GPU benchmark publication, pool mining path, multi-GPU process guidance.</div>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-dot pending">7</div>
+          <div>
+            <div class="phase-title">Phase 7 — Mainnet Candidate <span class="phase-tag done">Done</span></div>
+            <div class="phase-desc">Consensus hardening, founder wallet policy, pool reference implementation, monitoring, risk disclosure, v0.3.1 mainnet-candidate genesis.</div>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-dot active">8</div>
+          <div>
+            <div class="phase-title">Phase 8 — Pre-Launch <span class="phase-tag active">Doing</span></div>
+            <div class="phase-desc">Pool website live, docs/whitepaper update, Chrome wallet, MC seed infrastructure, license choice, and soak testing before public mainnet-candidate launch.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="section" id="disclaimer">
+      <h2 class="section-title"><span class="section-num">—</span> Disclaimer</h2>
+      <p>This document is provided for informational purposes only. Tensorium is experimental software in active development. <strong>Testnet TXM has no monetary value.</strong> Do not invest money based on testnet activity.</p>
+      <p>The authors make no warranties regarding the software's fitness for any particular purpose, security properties, or continued availability. All consensus parameters, tokenomics figures, and roadmap timelines are subject to change based on technical findings.</p>
+      <p>This is not financial advice. Participation in mainnet mining involves real risk. Always conduct your own research.</p>
+      <div class="callout callout-success" style="margin-top:24px">
+        <span class="callout-icon">✓</span>
+        <div class="callout-body">The source code for all Tensorium software is open and auditable at <a href="https://github.com/rygroup-dev/tensorium-core" target="_blank">github.com/rygroup-dev/tensorium-core</a>. If you find a bug, please open an issue.</div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+// Active nav link on scroll
+const sections = document.querySelectorAll('.section, #abstract');
+const links    = document.querySelectorAll('.nav-link');
+
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+
+sections.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>

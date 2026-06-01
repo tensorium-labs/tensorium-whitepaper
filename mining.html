@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mining Guide — Tensorium</title>
+  <meta name="description" content="How to mine Tensorium (TXM) — setup your node, create a wallet, and start mining on testnet.">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬡</text></svg>">
+</head>
+<body>
+<div class="layout">
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <a href="/" class="sidebar-logo">
+    <div class="logo-icon">⬡</div>
+    <div>
+      <div class="logo-text">Tensorium</div>
+      <div class="logo-sub">Mining Guide</div>
+    </div>
+  </a>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section">Mining Guide</div>
+    <a href="#overview"      class="nav-link active"><span class="nav-num">—</span> Overview</a>
+    <a href="#requirements"  class="nav-link"><span class="nav-num">1</span> Requirements</a>
+    <a href="#install"       class="nav-link"><span class="nav-num">2</span> Installation</a>
+    <a href="#wallet"        class="nav-link"><span class="nav-num">3</span> Create Wallet</a>
+    <a href="#node"          class="nav-link"><span class="nav-num">4</span> Run a Node</a>
+    <a href="#mine"          class="nav-link"><span class="nav-num">5</span> Start Mining</a>
+    <a href="#rewards"       class="nav-link"><span class="nav-num">6</span> Rewards</a>
+    <a href="#advanced"      class="nav-link"><span class="nav-num">7</span> Advanced</a>
+    <a href="#faq"           class="nav-link"><span class="nav-num">—</span> FAQ</a>
+
+    <div class="nav-section" style="margin-top:16px">Resources</div>
+    <a href="/"                                             class="nav-link"><span class="nav-num">📄</span> Whitepaper</a>
+    <a href="https://explorer.tensoriumlabs.com"            class="nav-link" target="_blank"><span class="nav-num">🔍</span> Explorer</a>
+    <a href="https://github.com/rygroup-dev/tensorium-core" class="nav-link" target="_blank"><span class="nav-num">⌨</span> GitHub</a>
+  </nav>
+
+  <div class="sidebar-footer">
+    © 2025 Tensorium Labs<br>
+    Chain: <code>tensorium-testnet-0</code>
+  </div>
+</aside>
+
+<!-- Main -->
+<div class="main">
+  <div class="page-nav">
+    <span class="page-nav-title">Mining Guide</span>
+    <div class="page-nav-links">
+      <a href="/">Whitepaper</a>
+      <a href="/mining.html" class="current">Mining Guide</a>
+      <a href="https://explorer.tensoriumlabs.com" target="_blank">Explorer ↗</a>
+      <a href="https://github.com/rygroup-dev/tensorium-core" target="_blank">GitHub ↗</a>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- Header -->
+    <div class="doc-header" id="overview">
+      <div class="doc-tag">⛏ Mining Guide</div>
+      <h1 class="doc-title">How to Mine Tensorium (TXM)</h1>
+      <p class="doc-subtitle">Step-by-step guide to setting up a node, creating a wallet, and mining TXM on the public testnet. No GPU required — CPU mining is available now.</p>
+      <div class="doc-meta">
+        <span>🌐 Network: <code>tensorium-testnet-0</code></span>
+        <span>⚙ Difficulty: 26 bits</span>
+        <span>🎁 Reward: 15.23557865 TXM/block</span>
+        <span>💻 Platform: Linux x86_64</span>
+      </div>
+    </div>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">⚠</span>
+      <div class="callout-body"><strong>Testnet only.</strong> Tensorium is currently in public testnet. Testnet TXM has no monetary value. The chain may be reset before mainnet. Mine to test the software, report bugs, and participate in the community.</div>
+    </div>
+
+    <!-- Quick overview -->
+    <div class="mining-hero" style="margin-top:32px">
+      <div class="mining-hero-title">4 steps to start mining</div>
+      <div class="mining-hero-sub">From zero to mining in under 5 minutes on any Linux machine.</div>
+      <div class="step-grid">
+        <div class="step-card">
+          <div class="step-num">01</div>
+          <div class="step-title">Install</div>
+          <div class="step-desc">One-line installer downloads all binaries and sets up your node.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">02</div>
+          <div class="step-title">Create Wallet</div>
+          <div class="step-desc">Generate a secure wallet and get your TXM address.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">03</div>
+          <div class="step-title">Sync Node</div>
+          <div class="step-desc">Connect to the seed node and download the current chain.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">04</div>
+          <div class="step-title">Mine</div>
+          <div class="step-desc">Run txmminer and start earning block rewards.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1. Requirements -->
+    <div class="section" id="requirements">
+      <h2 class="section-title"><span class="section-num">1</span> Requirements</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Component</th><th>Minimum</th><th>Recommended</th></tr></thead>
+          <tbody>
+            <tr><td>OS</td><td>Linux x86_64</td><td>Ubuntu 22.04 / 24.04 LTS</td></tr>
+            <tr><td>CPU</td><td>2 cores</td><td>4+ cores (more = faster mining)</td></tr>
+            <tr><td>RAM</td><td>512 MB</td><td>2 GB+</td></tr>
+            <tr><td>Disk</td><td>1 GB free</td><td>10 GB+ (for chain growth)</td></tr>
+            <tr><td>Network</td><td>Stable internet, port 23333 open</td><td>Low-latency connection</td></tr>
+            <tr><td>Privileges</td><td>root or sudo</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">ℹ</span>
+        <div class="callout-body"><strong>No GPU required for testnet.</strong> Current testnet difficulty (26 bits) is designed for CPU mining. GPU mining will be required for mainnet (Phase 6), but testnet participation is open to everyone with a CPU.</div>
+      </div>
+    </div>
+
+    <!-- 2. Install -->
+    <div class="section" id="install">
+      <h2 class="section-title"><span class="section-num">2</span> Installation</h2>
+
+      <h3>2.1 One-line Installer (Recommended)</h3>
+      <p>The installer downloads pre-compiled binaries, creates a wallet, syncs the chain, and optionally sets up systemd services:</p>
+
+      <pre>curl -fsSL https://raw.githubusercontent.com/rygroup-dev/tensorium-core/main/install.sh | bash</pre>
+
+      <p>The installer will:</p>
+      <ol>
+        <li>Download <code>tensorium-node</code>, <code>txmminer</code>, <code>txmwallet</code> to <code>/usr/local/bin/</code></li>
+        <li>Prompt you for a wallet passphrase and create a wallet at <code>~/tensorium-node/wallet.json</code></li>
+        <li>Initialize the chain (genesis block) and sync from the seed node</li>
+        <li>Optionally install systemd services for auto-start on reboot</li>
+      </ol>
+
+      <h3>2.2 Manual Installation</h3>
+      <p>Download the latest binaries from <a href="https://github.com/rygroup-dev/tensorium-core/releases" target="_blank">GitHub Releases</a>:</p>
+
+      <pre># Download
+RELEASE="v0.3.1-mainnet-candidate"
+BASE="https://github.com/rygroup-dev/tensorium-core/releases/download/${RELEASE}"
+
+curl -fsSL -o tensorium-node  "${BASE}/tensorium-node-linux-x86_64"
+curl -fsSL -o txmminer         "${BASE}/txmminer-linux-x86_64"
+curl -fsSL -o txmwallet        "${BASE}/txmwallet-linux-x86_64"
+
+# Make executable and install
+chmod +x tensorium-node txmminer txmwallet
+sudo mv tensorium-node txmminer txmwallet /usr/local/bin/
+
+# Verify
+tensorium-node --help</pre>
+
+      <h3>2.3 Build from Source</h3>
+      <p>If you prefer to build from source (requires Rust ≥ 1.76):</p>
+      <pre>git clone https://github.com/rygroup-dev/tensorium-core.git
+cd tensorium-core
+cargo build --release
+
+# Binaries will be in target/release/
+sudo cp target/release/tensorium-node target/release/txmminer target/release/txmwallet /usr/local/bin/</pre>
+    </div>
+
+    <!-- 3. Wallet -->
+    <div class="section" id="wallet">
+      <h2 class="section-title"><span class="section-num">3</span> Create a Wallet</h2>
+
+      <h3>3.1 Create New Wallet</h3>
+      <pre># Set where to store the wallet
+export TENSORIUM_WALLET=~/tensorium-node/wallet.json
+
+# Set your passphrase (use a strong passphrase — this encrypts your private key)
+export TENSORIUM_WALLET_PASSPHRASE="your-strong-passphrase-here"
+
+# Create the wallet
+txmwallet create</pre>
+
+      <p>This generates a secp256k1 keypair and saves it encrypted with Argon2id + ChaCha20-Poly1305. Output example:</p>
+      <pre>address=txm1abc123...
+public_key=02ab34...
+wallet_version=2
+encrypted=true</pre>
+
+      <h3>3.2 Get Your Mining Address</h3>
+      <pre>export TENSORIUM_WALLET=~/tensorium-node/wallet.json
+export TENSORIUM_WALLET_PASSPHRASE="your-passphrase"
+
+txmwallet getnewaddress
+# → txm1abc123xyz...   (your TXM address)</pre>
+
+      <p>Save this address — you will provide it to <code>txmminer</code> so block rewards go to your wallet.</p>
+
+      <h3>3.3 Backup Your Wallet</h3>
+
+      <div class="callout callout-warn">
+        <span class="callout-icon">🔑</span>
+        <div class="callout-body">
+          <strong>Back up your wallet file immediately.</strong> If you lose <code>wallet.json</code> or forget your passphrase, your funds are permanently unrecoverable. Copy the wallet file to at least two separate locations (external drive, cloud storage, etc.).
+        </div>
+      </div>
+
+      <pre># Backup
+cp ~/tensorium-node/wallet.json ~/wallet-backup-$(date +%Y%m%d).json
+
+# Verify backup can be decrypted
+TENSORIUM_WALLET=~/wallet-backup-*.json \
+TENSORIUM_WALLET_PASSPHRASE="your-passphrase" \
+txmwallet unlock-check</pre>
+
+      <h3>3.4 Check Balance</h3>
+      <pre>export TENSORIUM_WALLET=~/tensorium-node/wallet.json
+export TENSORIUM_WALLET_PASSPHRASE="your-passphrase"
+export TENSORIUM_STATE=~/tensorium-node/state.json
+
+txmwallet balance</pre>
+
+      <p>Note: Coinbase rewards (block rewards) require <strong>100 confirmations</strong> before they appear as spendable.</p>
+    </div>
+
+    <!-- 4. Node -->
+    <div class="section" id="node">
+      <h2 class="section-title"><span class="section-num">4</span> Run a Node</h2>
+
+      <h3>4.1 Initialize the Chain</h3>
+      <pre>mkdir -p ~/tensorium-node
+cd ~/tensorium-node
+
+# Initialize — this mines the genesis block (~30 seconds at difficulty 26)
+TENSORIUM_STATE=~/tensorium-node/state.json \
+TENSORIUM_MEMPOOL=~/tensorium-node/mempool.json \
+TENSORIUM_BANS=~/tensorium-node/banlist.json \
+tensorium-node init</pre>
+
+      <h3>4.2 Sync from Seed Node</h3>
+      <pre>TENSORIUM_STATE=~/tensorium-node/state.json \
+TENSORIUM_MEMPOOL=~/tensorium-node/mempool.json \
+TENSORIUM_BANS=~/tensorium-node/banlist.json \
+tensorium-node sync 157.230.44.162:23333</pre>
+
+      <p>Output shows sync progress:</p>
+      <pre>sync start: peer=157.230.44.162:23333 peer_height=150 our_height=0
+  synced +50 blocks  height=50  total_synced=50
+  synced +50 blocks  height=100  total_synced=100
+  synced +50 blocks  height=150  total_synced=150
+sync complete: tip=150 synced=150 blocks from 157.230.44.162:23333</pre>
+
+      <h3>4.3 Start RPC and P2P</h3>
+      <p>Open two terminal windows (or use <code>nohup</code> / <code>tmux</code>):</p>
+      <pre># Terminal 1 — RPC server (do NOT expose this port publicly)
+TENSORIUM_STATE=~/tensorium-node/state.json \
+TENSORIUM_MEMPOOL=~/tensorium-node/mempool.json \
+TENSORIUM_BANS=~/tensorium-node/banlist.json \
+TENSORIUM_PEERS=157.230.44.162:23333 \
+tensorium-node rpc 127.0.0.1:23332
+
+# Terminal 2 — P2P listener (this port should be open/forwarded)
+TENSORIUM_STATE=~/tensorium-node/state.json \
+TENSORIUM_MEMPOOL=~/tensorium-node/mempool.json \
+TENSORIUM_BANS=~/tensorium-node/banlist.json \
+tensorium-node p2p-listen 0.0.0.0:23333</pre>
+
+      <p>Check your node is working:</p>
+      <pre>curl -s http://localhost:23332/getblockcount
+# → {"blocks":151,"chain_id":"tensorium-testnet-0","height":150}</pre>
+
+      <h3>4.4 Systemd Service (Auto-start on Reboot)</h3>
+      <pre>sudo tee /etc/systemd/system/tensorium-rpc.service &lt;&lt;EOF
+[Unit]
+Description=Tensorium Node RPC
+After=network.target
+
+[Service]
+Type=simple
+User=$(whoami)
+Environment=TENSORIUM_STATE=$HOME/tensorium-node/state.json
+Environment=TENSORIUM_MEMPOOL=$HOME/tensorium-node/mempool.json
+Environment=TENSORIUM_BANS=$HOME/tensorium-node/banlist.json
+Environment=TENSORIUM_PEERS=157.230.44.162:23333
+ExecStart=/usr/local/bin/tensorium-node rpc 127.0.0.1:23332
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo tee /etc/systemd/system/tensorium-p2p.service &lt;&lt;EOF
+[Unit]
+Description=Tensorium Node P2P
+After=network.target
+
+[Service]
+Type=simple
+User=$(whoami)
+Environment=TENSORIUM_STATE=$HOME/tensorium-node/state.json
+Environment=TENSORIUM_MEMPOOL=$HOME/tensorium-node/mempool.json
+Environment=TENSORIUM_BANS=$HOME/tensorium-node/banlist.json
+ExecStart=/usr/local/bin/tensorium-node p2p-listen 0.0.0.0:23333
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable --now tensorium-rpc tensorium-p2p</pre>
+    </div>
+
+    <!-- 5. Mine -->
+    <div class="section" id="mine">
+      <h2 class="section-title"><span class="section-num">5</span> Start Mining</h2>
+
+      <h3>5.1 Basic Mining</h3>
+      <pre>YOUR_ADDRESS="txm1your_address_here"
+
+# Mine continuously — auto-detects CPU thread count
+txmminer 127.0.0.1:23332 "$YOUR_ADDRESS"</pre>
+
+      <p>Sample output:</p>
+      <pre>txmminer  rpc=127.0.0.1:23332  miner=txm1abc...  threads=8
+Press Ctrl+C to stop.
+
+mining  height=151  bits=26  threads=8  … ✓  height=151  nonce=8432156  7.2s  9.31 MH/s
+mining  height=152  bits=26  threads=8  … ✓  height=152  nonce=52341   0.1s  8.87 MH/s
+mining  height=153  bits=26  threads=8  … ✓  height=153  nonce=71234812 61.3s 9.14 MH/s</pre>
+
+      <h3>5.2 Specify Thread Count</h3>
+      <pre># Use 4 threads
+txmminer 127.0.0.1:23332 "$YOUR_ADDRESS" 4
+
+# Use all available CPU cores (default)
+txmminer 127.0.0.1:23332 "$YOUR_ADDRESS"</pre>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body"><strong>More threads = more hashrate.</strong> Each thread searches a different portion of the nonce space in parallel. On an 8-core CPU, using 8 threads gives ~8× the hashrate of a single thread. Leave 1-2 cores free for system tasks if needed.</div>
+      </div>
+
+      <h3>5.3 Expected Hashrate by CPU</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>CPU</th><th>Cores</th><th>Est. Hashrate</th><th>~Block Time (diff 26)</th></tr></thead>
+          <tbody>
+            <tr><td>Budget VPS (1 vCPU)</td><td>1</td><td>1–3 MH/s</td><td>25–70 seconds</td></tr>
+            <tr><td>Mid-range VPS (4 vCPU)</td><td>4</td><td>5–15 MH/s</td><td>5–15 seconds</td></tr>
+            <tr><td>Intel Core i5-13600K</td><td>14</td><td>50–100 MH/s</td><td>&lt; 2 seconds</td></tr>
+            <tr><td>AMD Ryzen 9 7950X</td><td>16</td><td>80–150 MH/s</td><td>&lt; 1 second</td></tr>
+            <tr><td>AMD EPYC 7763 (64c)</td><td>64</td><td>300–600 MH/s</td><td>instant</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-warn">
+        <span class="callout-icon">⚠</span>
+        <div class="callout-body"><strong>High CPU hashrate ≠ fair.</strong> At testnet difficulty 26, a powerful server can mine blocks in milliseconds. This is intentional — testnet is for testing the chain, not fair distribution. Difficulty will auto-adjust upward as more hashrate joins, or will be reset with higher initial difficulty before mainnet.</div>
+      </div>
+
+      <h3>5.4 Keep Miner Running</h3>
+      <pre># Using nohup
+nohup txmminer 127.0.0.1:23332 "$YOUR_ADDRESS" > ~/tensorium-node/miner.log 2>&1 &
+echo "Miner PID: $!"
+
+# Using tmux
+tmux new -s miner "txmminer 127.0.0.1:23332 $YOUR_ADDRESS"
+
+# Systemd service
+sudo tee /etc/systemd/system/tensorium-miner.service &lt;&lt;EOF
+[Unit]
+Description=Tensorium CPU Miner
+After=tensorium-rpc.service
+
+[Service]
+Type=simple
+User=$(whoami)
+ExecStart=/usr/local/bin/txmminer 127.0.0.1:23332 YOUR_TXM_ADDRESS
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable --now tensorium-miner</pre>
+    </div>
+
+    <!-- 6. Rewards -->
+    <div class="section" id="rewards">
+      <h2 class="section-title"><span class="section-num">6</span> Mining Rewards</h2>
+
+      <h3>6.1 Block Reward</h3>
+      <p>Every block you mine earns you <strong>15.23557865 TXM</strong> (Era 1 reward). This reward is a coinbase transaction with your address as the output.</p>
+
+      <div class="spec-grid">
+        <div class="spec-item">
+          <div class="spec-label">Current Reward</div>
+          <div class="spec-value">15.23557865</div>
+          <div class="spec-sub">TXM per block (Era 1)</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Maturity</div>
+          <div class="spec-value">100 blocks</div>
+          <div class="spec-sub">before reward is spendable</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Next Halving</div>
+          <div class="spec-value">Era 2</div>
+          <div class="spec-sub">at block 1,051,200 (~2 years)</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Max Supply</div>
+          <div class="spec-value">32,000,000</div>
+          <div class="spec-sub">TXM available for mining</div>
+        </div>
+      </div>
+
+      <h3>6.2 Coinbase Maturity</h3>
+      <p>Block rewards cannot be spent until <strong>100 blocks</strong> have been built on top of the block you mined. This protects against reorg invalidating your reward. At 60s block time, maturity takes ~100 minutes.</p>
+
+      <h3>6.3 Check Your Earnings</h3>
+      <pre>export TENSORIUM_WALLET=~/tensorium-node/wallet.json
+export TENSORIUM_WALLET_PASSPHRASE="your-passphrase"
+export TENSORIUM_STATE=~/tensorium-node/state.json
+
+# Show balance (mature spendable + immature pending)
+txmwallet balance
+
+# Check address on explorer
+# https://explorer.tensoriumlabs.com/address/YOUR_TXM_ADDRESS</pre>
+    </div>
+
+    <!-- 7. Advanced -->
+    <div class="section" id="advanced">
+      <h2 class="section-title"><span class="section-num">7</span> Advanced Configuration</h2>
+
+      <h3>7.1 Environment Variables</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Variable</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>TENSORIUM_STATE</code></td><td><code>tensorium-testnet-state.json</code></td><td>Chain state file path</td></tr>
+            <tr><td><code>TENSORIUM_MEMPOOL</code></td><td><code>tensorium-testnet-mempool.json</code></td><td>Mempool file path</td></tr>
+            <tr><td><code>TENSORIUM_BANS</code></td><td><code>tensorium-testnet-banlist.json</code></td><td>Peer ban list file path</td></tr>
+            <tr><td><code>TENSORIUM_PEERS</code></td><td><em>empty</em></td><td>Comma-separated peers for block/tx broadcast</td></tr>
+            <tr><td><code>TENSORIUM_NODE_ID</code></td><td>node-&lt;timestamp&gt;</td><td>Your node identity in P2P handshake</td></tr>
+            <tr><td><code>TENSORIUM_WALLET</code></td><td><code>tensorium-wallet.json</code></td><td>Wallet file path</td></tr>
+            <tr><td><code>TENSORIUM_WALLET_PASSPHRASE</code></td><td><em>required</em></td><td>Passphrase to decrypt wallet</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>7.2 RPC API Reference</h3>
+      <pre># Health check
+curl http://localhost:23332/health
+
+# Block count
+curl http://localhost:23332/getblockcount
+
+# Current difficulty
+curl http://localhost:23332/getdifficulty
+
+# Get block by height
+curl http://localhost:23332/getblock/0      # genesis
+curl http://localhost:23332/getblock/100
+
+# Mempool info
+curl http://localhost:23332/getmempoolinfo
+
+# Block template (for custom miner integration)
+curl http://localhost:23332/getblocktemplate/txm1youraddress
+
+# Peer ban list
+curl http://localhost:23332/getbanlist
+
+# Unban an IP
+curl http://localhost:23332/unban/1.2.3.4</pre>
+
+      <h3>7.3 Sending Transactions</h3>
+      <pre>export TENSORIUM_WALLET=~/tensorium-node/wallet.json
+export TENSORIUM_WALLET_PASSPHRASE="your-passphrase"
+export TENSORIUM_STATE=~/tensorium-node/state.json
+
+# Build and sign a transaction (100000000 atoms = 1.0 TXM)
+txmwallet send txm1recipient_address 100000000 /tmp/my-tx.json
+
+# Broadcast to your node
+txmwallet broadcast /tmp/my-tx.json 127.0.0.1:23332</pre>
+
+      <h3>7.4 Node Commands Reference</h3>
+      <pre>tensorium-node init                      # Initialize genesis block
+tensorium-node status                    # Show chain tip and height
+tensorium-node rpc [bind]                # Start HTTP RPC (default 127.0.0.1:23332)
+tensorium-node p2p-listen [bind]         # Start P2P server (default 0.0.0.0:23333)
+tensorium-node sync [host:port]          # Download missing blocks from a peer
+tensorium-node p2p-connect &lt;host:port&gt;  # Diagnostic handshake to a peer
+tensorium-node peers                     # Print configured peers
+tensorium-node banlist                   # Show peer ban list
+tensorium-node unban &lt;ip&gt;               # Remove a ban</pre>
+    </div>
+
+    <!-- FAQ -->
+    <div class="section" id="faq">
+      <h2 class="section-title"><span class="section-num">—</span> FAQ</h2>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Is testnet TXM worth anything? <span>+</span>
+        </div>
+        <div class="faq-a">
+          No. Testnet TXM has zero monetary value. Testnet exists to test the protocol and find bugs before mainnet. The chain may be reset. Do not buy, sell, or trade testnet coins.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Do I need a GPU to mine? <span>+</span>
+        </div>
+        <div class="faq-a">
+          Not on testnet. Current testnet difficulty (26 bits) is designed for CPU mining. Any modern CPU can mine blocks. For mainnet, GPU mining will be required (difficulty 36+ bits). We will release a CUDA miner before mainnet.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Why does genesis init take so long? <span>+</span>
+        </div>
+        <div class="faq-a">
+          Genesis initialization mines the first block at difficulty 26, which requires finding a nonce that produces a hash with 26 leading zero bits (~67 million hash attempts on average). On a basic VPS, this takes 1–3 minutes. This is intentional — all nodes must mine the same genesis with the same fixed timestamp to get the same block hash.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          My miner found a block but txmwallet balance shows 0. Why? <span>+</span>
+        </div>
+        <div class="faq-a">
+          Coinbase rewards (block rewards) require 100 confirmations before they are spendable. Wait for 100 more blocks to be mined after your block, then check your balance again.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          What is the seed node and do I need to keep it connected? <span>+</span>
+        </div>
+        <div class="faq-a">
+          The seed node at 157.230.44.162:23333 is the bootstrap node run by the Tensorium team. You need it to sync your initial chain state and to broadcast your mined blocks. Set TENSORIUM_PEERS=157.230.44.162:23333 in your RPC service for automatic block propagation.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Can I run the node and miner on different machines? <span>+</span>
+        </div>
+        <div class="faq-a">
+          Yes. The miner connects to the node via RPC. If the miner is on a different machine, bind the RPC to 0.0.0.0 instead of 127.0.0.1, and use a firewall to restrict RPC access to trusted IPs only. Never expose the RPC port publicly without authentication (not yet implemented).
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          I found a bug. Where do I report it? <span>+</span>
+        </div>
+        <div class="faq-a">
+          Open an issue on GitHub: <a href="https://github.com/rygroup-dev/tensorium-core/issues" target="_blank">github.com/rygroup-dev/tensorium-core/issues</a>. Include your OS version, the binary version (from release tag), and steps to reproduce.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          When is mainnet? <span>+</span>
+        </div>
+        <div class="faq-a">
+          No date is set. Mainnet requires: stable GPU testnet running for ≥4 weeks, independent security audit, GPU miner published, and final community review. See the <a href="/#roadmap">Roadmap</a> for full details. We will not rush mainnet.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+function toggleFaq(el) {
+  const answer = el.nextElementSibling;
+  const icon   = el.querySelector('span');
+  const isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.faq-a.open').forEach(a => {
+    a.classList.remove('open');
+    a.previousElementSibling.querySelector('span').textContent = '+';
+  });
+  if (!isOpen) {
+    answer.classList.add('open');
+    icon.textContent = '−';
+  }
+}
+
+// Active nav link on scroll
+const sections = document.querySelectorAll('.section, [id="overview"]');
+const links    = document.querySelectorAll('.nav-link');
+
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+
+sections.forEach(s => { if(s.id) obs.observe(s); });
+</script>
+</body>
+</html>

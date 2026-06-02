@@ -17,7 +17,7 @@
     <div class="logo-icon">⬡</div>
     <div>
       <div class="logo-text">Tensorium</div>
-      <div class="logo-sub">Whitepaper v1.0</div>
+      <div class="logo-sub">Whitepaper v2.0</div>
     </div>
   </a>
 
@@ -39,8 +39,12 @@
     <a href="https://pooltxm.tensoriumlabs.com"         class="nav-link" target="_blank"><span class="nav-num">◈</span> Pool</a>
     <a href="https://t.me/+QOsnpSdhDGZkZGQ1"           class="nav-link" target="_blank"><span class="nav-num">💬</span> Telegram</a>
     <a href="https://explorer.tensoriumlabs.com"        class="nav-link" target="_blank"><span class="nav-num">🔍</span> Explorer</a>
-    <a href="https://github.com/rygroup-dev/tensorium-core/blob/main/RISK_DISCLOSURE.md" class="nav-link" target="_blank"><span class="nav-num">⚖</span> Risk</a>
-    <a href="https://github.com/rygroup-dev/tensorium-core" class="nav-link" target="_blank"><span class="nav-num">⌨</span> GitHub</a>
+    <a href="https://faucet.tensoriumlabs.com"              class="nav-link" target="_blank"><span class="nav-num">💧</span> Faucet</a>
+    <a href="https://bridge.tensoriumlabs.com"              class="nav-link" target="_blank"><span class="nav-num">🌉</span> Bridge</a>
+    <a href="https://otc.tensoriumlabs.com"                 class="nav-link" target="_blank"><span class="nav-num">🤝</span> OTC</a>
+    <a href="https://github.com/tensorium-labs/tensorium-wallet-extension" class="nav-link" target="_blank"><span class="nav-num">🧩</span> Wallet</a>
+    <a href="https://github.com/tensorium-labs/tensorium-core/blob/main/RISK_DISCLOSURE.md" class="nav-link" target="_blank"><span class="nav-num">⚖</span> Risk</a>
+    <a href="https://github.com/tensorium-labs/tensorium-core" class="nav-link" target="_blank"><span class="nav-num">⌨</span> GitHub</a>
   </nav>
 
   <div class="sidebar-footer">
@@ -57,7 +61,7 @@
       <a href="/" class="current">Whitepaper</a>
       <a href="/mining.html">Mining Guide</a>
       <a href="https://explorer.tensoriumlabs.com" target="_blank">Explorer ↗</a>
-      <a href="https://github.com/rygroup-dev/tensorium-core" target="_blank">GitHub ↗</a>
+      <a href="https://github.com/tensorium-labs/tensorium-core" target="_blank">GitHub ↗</a>
     </div>
   </div>
 
@@ -67,12 +71,12 @@
     <div class="doc-header">
       <div class="doc-tag">⬡ Technical Whitepaper</div>
       <h1 class="doc-title">Tensorium: A Proof-of-Work Blockchain for Open, GPU-First Mining</h1>
-      <p class="doc-subtitle">A transparent, community-minable Layer 1 blockchain with SHA256d consensus, UTXO model, and a fair GPU-first mainnet direction.</p>
+      <p class="doc-subtitle">A transparent, community-minable Layer 1 blockchain with SHA256d consensus, a UTXO ledger, and a staged path from public testnet to GPU-first mainnet-candidate launch.</p>
       <div class="doc-meta">
-        <span>📅 Version 1.0 — May 2025</span>
+        <span>📅 Version 2.0 — June 2026</span>
         <span>🔗 Testnet: <code>tensorium-testnet-0</code></span>
         <span>💎 Ticker: <code>TXM</code></span>
-        <span>🏗 Status: Phase 8 Pre-Launch</span>
+        <span>🏗 Status: Phase 8 soak test in progress</span>
       </div>
     </div>
 
@@ -100,6 +104,16 @@
 
       <h3>1.3 Scope of This Document</h3>
       <p>This whitepaper covers the protocol design, consensus mechanism, tokenomics, and roadmap of the Tensorium network as of its public testnet launch. It is a living document and will be updated as the protocol evolves toward mainnet.</p>
+
+      <h3>1.4 Current Public Surfaces</h3>
+      <p>Tensorium is no longer just a node binary and a miner. The current public stack already includes the operational surfaces needed for testing, onboarding, and later ecosystem growth:</p>
+      <ul>
+        <li><strong>Explorer.</strong> <a href="https://explorer.tensoriumlabs.com" target="_blank">explorer.tensoriumlabs.com</a> for blocks, transactions, addresses, mempool, and basic chain charts.</li>
+        <li><strong>Faucet.</strong> <a href="https://faucet.tensoriumlabs.com" target="_blank">faucet.tensoriumlabs.com</a> for low-friction testnet onboarding after the 2026-06-01 reset.</li>
+        <li><strong>Pool website.</strong> <a href="https://pooltxm.tensoriumlabs.com" target="_blank">pooltxm.tensoriumlabs.com</a> for the reference pool, fee disclosure, and miner-facing stats.</li>
+        <li><strong>Bridge and OTC surfaces.</strong> <a href="https://bridge.tensoriumlabs.com" target="_blank">bridge.tensoriumlabs.com</a> and <a href="https://otc.tensoriumlabs.com" target="_blank">otc.tensoriumlabs.com</a> define the early liquidity and transfer roadmap for Phase 9.</li>
+        <li><strong>Browser wallet.</strong> A Chrome-compatible wallet extension is implemented in <a href="https://github.com/tensorium-labs/tensorium-wallet-extension" target="_blank">tensorium-wallet-extension</a>; Chrome Web Store submission is still pending.</li>
+      </ul>
     </div>
 
     <!-- 2. Architecture -->
@@ -207,9 +221,9 @@ Timestamp:    2025-05-30 16:00:00 UTC
 Nonce:        95,202,247
 Difficulty:   26 bits</pre>
       <p>The mainnet-candidate genesis is also hardcoded in <code>v0.3.1-mainnet-candidate</code> for pre-launch validation:</p>
-      <pre>Mainnet-candidate genesis hash: 0000000000d61e99b9e2530609632b399d0f0b538c2d54daa1dddbfe28ea08dc
+      <pre>Mainnet-candidate genesis hash: 000000000063ab6f057a16376b1712e709719126ad977a3d4be23f83b89f0392
 Timestamp:                     2026-06-01 00:00:00 UTC
-Nonce:                         56,167,663,277
+Nonce:                         114,103,168,481
 Chain ID:                      tensorium-mainnet-candidate-0</pre>
     </div>
 
@@ -395,7 +409,7 @@ txmminer 127.0.0.1:23332 txm1youraddress 8         # use 8 threads</pre>
       </div>
 
       <h3>6.2 Peer Discovery</h3>
-      <p>The current implementation uses static peer configuration via the <code>TENSORIUM_PEERS</code> environment variable plus built-in default seeds in the node binary. DNS seed support remains a Phase 8/mainnet-candidate infrastructure item.</p>
+      <p>The current implementation uses static peer configuration via the <code>TENSORIUM_PEERS</code> environment variable plus built-in default seeds in the node binary. For mainnet-candidate infrastructure, DNS seed support is already live at <code>seed.tensoriumlabs.com:33333</code>, with a second backup seed path prepared separately for redundancy.</p>
 
       <h3>6.3 Peer Ban Policy</h3>
       <p>Nodes maintain a score-based ban list to protect against malicious peers:</p>
@@ -449,7 +463,7 @@ txmminer 127.0.0.1:23332 txm1youraddress 8         # use 8 threads</pre>
       <ul>
         <li>Extended soak test of mainnet-candidate node and pool services</li>
         <li>Stable GPU-first public testnet without consensus bugs</li>
-        <li>Final license decision and documentation review</li>
+        <li>Static site and wallet distribution surfaces kept consistent with the current release state</li>
         <li>Published risk disclosure, founder lock policy, pool fee policy, and genesis parameters before public launch</li>
       </ul>
     </div>
@@ -519,7 +533,21 @@ txmminer 127.0.0.1:23332 txm1youraddress 8         # use 8 threads</pre>
           <div class="phase-dot active">8</div>
           <div>
             <div class="phase-title">Phase 8 — Pre-Launch <span class="phase-tag active">Doing</span></div>
-            <div class="phase-desc">Pool website live, docs/whitepaper update, Chrome wallet, MC seed infrastructure, license choice, and soak testing before public mainnet-candidate launch.</div>
+            <div class="phase-desc">Phases 8A-8D are complete: MC seed infrastructure, Chrome wallet implementation, faucet/pool/landing pages, docs sync, and license work. Phase 8E soak testing remains in progress before any public mainnet-candidate announcement.</div>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-dot pending">9</div>
+          <div>
+            <div class="phase-title">Phase 9 — Ecosystem <span class="phase-tag">Todo</span></div>
+            <div class="phase-desc">Bridge beta operations, OTC iteration, explorer polish, JS/Python SDKs, developer docs, browser-wallet distribution, and early listing or liquidity preparation around TXM.</div>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-dot pending">10</div>
+          <div>
+            <div class="phase-title">Phase 10 — Advanced Protocol <span class="phase-tag">Todo</span></div>
+            <div class="phase-desc">Formal EVM bridge architecture, deeper explorer indexing, storage-engine upgrades beyond JSON state, governance or scripting experiments, and longer-horizon protocol hardening.</div>
           </div>
         </div>
       </div>
@@ -533,7 +561,7 @@ txmminer 127.0.0.1:23332 txm1youraddress 8         # use 8 threads</pre>
       <p>This is not financial advice. Participation in mainnet mining involves real risk. Always conduct your own research.</p>
       <div class="callout callout-success" style="margin-top:24px">
         <span class="callout-icon">✓</span>
-        <div class="callout-body">The source code for all Tensorium software is open and auditable at <a href="https://github.com/rygroup-dev/tensorium-core" target="_blank">github.com/rygroup-dev/tensorium-core</a>. If you find a bug, please open an issue.</div>
+        <div class="callout-body">The source code for all Tensorium software is open and auditable at <a href="https://github.com/tensorium-labs/tensorium-core" target="_blank">github.com/tensorium-labs/tensorium-core</a>. If you find a bug, please open an issue.</div>
       </div>
     </div>
 

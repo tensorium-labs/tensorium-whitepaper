@@ -42,7 +42,7 @@
 
   <div class="sidebar-footer">
     © 2025 Tensorium Labs<br>
-    Chain: <code>tensorium-testnet-0</code>
+    Chain: <code>tensorium-mainnet-candidate-0</code>
   </div>
 </aside>
 
@@ -66,7 +66,7 @@
       <h1 class="doc-title">How to Mine Tensorium (TXM)</h1>
       <p class="doc-subtitle">Step-by-step guide to setting up a node, creating a wallet, and mining TXM on the public testnet. The current onboarding reset is CPU-friendly, while mainnet-candidate remains GPU-first.</p>
       <div class="doc-meta">
-        <span>🌐 Network: <code>tensorium-testnet-0</code></span>
+        <span>🌐 Network: <code>tensorium-mainnet-candidate-0</code></span>
         <span>⚙ Difficulty: 20 bits</span>
         <span>🎁 Reward: 15.23557865 TXM/block</span>
         <span>💻 Platform: Linux x86_64</span>
@@ -118,7 +118,7 @@
             <tr><td>CPU</td><td>2 cores</td><td>4+ cores (more = faster mining)</td></tr>
             <tr><td>RAM</td><td>512 MB</td><td>2 GB+</td></tr>
             <tr><td>Disk</td><td>1 GB free</td><td>10 GB+ (for chain growth)</td></tr>
-            <tr><td>Network</td><td>Stable internet, port 23333 open</td><td>Low-latency connection</td></tr>
+            <tr><td>Network</td><td>Stable internet, port 33333 open</td><td>Low-latency connection</td></tr>
             <tr><td>Privileges</td><td>root or sudo</td><td>—</td></tr>
           </tbody>
         </table>
@@ -243,20 +243,20 @@ cd ~/tensorium-node
 TENSORIUM_STATE=~/tensorium-node/state.json \
 TENSORIUM_MEMPOOL=~/tensorium-node/mempool.json \
 TENSORIUM_BANS=~/tensorium-node/banlist.json \
-tensorium-node init</pre>
+tensorium-node mainnet-candidate init</pre>
 
       <h3>4.2 Sync from Seed Node</h3>
       <pre>TENSORIUM_STATE=~/tensorium-node/state.json \
 TENSORIUM_MEMPOOL=~/tensorium-node/mempool.json \
 TENSORIUM_BANS=~/tensorium-node/banlist.json \
-tensorium-node sync 157.230.44.162:23333</pre>
+tensorium-node mainnet-candidate sync seed.tensoriumlabs.com:33333</pre>
 
       <p>Output shows sync progress:</p>
-      <pre>sync start: peer=157.230.44.162:23333 peer_height=150 our_height=0
+      <pre>sync start: peer=seed.tensoriumlabs.com:33333 peer_height=150 our_height=0
   synced +50 blocks  height=50  total_synced=50
   synced +50 blocks  height=100  total_synced=100
   synced +50 blocks  height=150  total_synced=150
-sync complete: tip=150 synced=150 blocks from 157.230.44.162:23333</pre>
+sync complete: tip=150 synced=150 blocks from seed.tensoriumlabs.com:33333</pre>
 
       <h3>4.3 Start RPC and P2P</h3>
       <p>Open two terminal windows (or use <code>nohup</code> / <code>tmux</code>):</p>
@@ -264,18 +264,18 @@ sync complete: tip=150 synced=150 blocks from 157.230.44.162:23333</pre>
 TENSORIUM_STATE=~/tensorium-node/state.json \
 TENSORIUM_MEMPOOL=~/tensorium-node/mempool.json \
 TENSORIUM_BANS=~/tensorium-node/banlist.json \
-TENSORIUM_PEERS=157.230.44.162:23333 \
-tensorium-node rpc 127.0.0.1:23332
+TENSORIUM_PEERS=seed.tensoriumlabs.com:33333 \
+tensorium-node mainnet-candidate rpc 127.0.0.1:33332
 
 # Terminal 2 — P2P listener (this port should be open/forwarded)
 TENSORIUM_STATE=~/tensorium-node/state.json \
 TENSORIUM_MEMPOOL=~/tensorium-node/mempool.json \
 TENSORIUM_BANS=~/tensorium-node/banlist.json \
-tensorium-node p2p-listen 0.0.0.0:23333</pre>
+tensorium-node mainnet-candidate p2p-listen 0.0.0.0:33333</pre>
 
       <p>Check your node is working:</p>
-      <pre>curl -s http://localhost:23332/getblockcount
-# → {"blocks":151,"chain_id":"tensorium-testnet-0","height":150}</pre>
+      <pre>curl -s http://localhost:33332/getblockcount
+# → {"blocks":151,"chain_id":"tensorium-mainnet-candidate-0","height":150}</pre>
 
       <h3>4.4 Systemd Service (Auto-start on Reboot)</h3>
       <pre>sudo tee /etc/systemd/system/tensorium-rpc.service &lt;&lt;EOF
@@ -289,8 +289,8 @@ User=$(whoami)
 Environment=TENSORIUM_STATE=$HOME/tensorium-node/state.json
 Environment=TENSORIUM_MEMPOOL=$HOME/tensorium-node/mempool.json
 Environment=TENSORIUM_BANS=$HOME/tensorium-node/banlist.json
-Environment=TENSORIUM_PEERS=157.230.44.162:23333
-ExecStart=/usr/local/bin/tensorium-node rpc 127.0.0.1:23332
+Environment=TENSORIUM_PEERS=seed.tensoriumlabs.com:33333
+ExecStart=/usr/local/bin/tensorium-node mainnet-candidate rpc 127.0.0.1:33332
 Restart=always
 RestartSec=10
 
@@ -309,7 +309,7 @@ User=$(whoami)
 Environment=TENSORIUM_STATE=$HOME/tensorium-node/state.json
 Environment=TENSORIUM_MEMPOOL=$HOME/tensorium-node/mempool.json
 Environment=TENSORIUM_BANS=$HOME/tensorium-node/banlist.json
-ExecStart=/usr/local/bin/tensorium-node p2p-listen 0.0.0.0:23333
+ExecStart=/usr/local/bin/tensorium-node mainnet-candidate p2p-listen 0.0.0.0:33333
 Restart=always
 RestartSec=10
 
@@ -329,10 +329,10 @@ sudo systemctl enable --now tensorium-rpc tensorium-p2p</pre>
       <pre>YOUR_ADDRESS="txm1your_address_here"
 
 # Mine continuously — auto-detects CPU thread count
-txmminer 127.0.0.1:23332 "$YOUR_ADDRESS"</pre>
+txmminer 127.0.0.1:33332 "$YOUR_ADDRESS"</pre>
 
       <p>Sample output:</p>
-      <pre>txmminer  rpc=127.0.0.1:23332  miner=txm1abc...  threads=8
+      <pre>txmminer  rpc=127.0.0.1:33332  miner=txm1abc...  threads=8
 Press Ctrl+C to stop.
 
 mining  height=151  bits=20  threads=8  … ✓  height=151  nonce=8432156  0.2s  9.31 MH/s
@@ -341,10 +341,10 @@ mining  height=153  bits=20  threads=8  … ✓  height=153  nonce=71234812  1.0
 
       <h3>5.2 Specify Thread Count</h3>
       <pre># Use 4 threads
-txmminer 127.0.0.1:23332 "$YOUR_ADDRESS" 4
+txmminer 127.0.0.1:33332 "$YOUR_ADDRESS" 4
 
 # Use all available CPU cores (default)
-txmminer 127.0.0.1:23332 "$YOUR_ADDRESS"</pre>
+txmminer 127.0.0.1:33332 "$YOUR_ADDRESS"</pre>
 
       <div class="callout callout-info">
         <span class="callout-icon">💡</span>
@@ -372,11 +372,11 @@ txmminer 127.0.0.1:23332 "$YOUR_ADDRESS"</pre>
 
       <h3>5.4 Keep Miner Running</h3>
       <pre># Using nohup
-nohup txmminer 127.0.0.1:23332 "$YOUR_ADDRESS" > ~/tensorium-node/miner.log 2>&1 &
+nohup txmminer 127.0.0.1:33332 "$YOUR_ADDRESS" > ~/tensorium-node/miner.log 2>&1 &
 echo "Miner PID: $!"
 
 # Using tmux
-tmux new -s miner "txmminer 127.0.0.1:23332 $YOUR_ADDRESS"
+tmux new -s miner "txmminer 127.0.0.1:33332 $YOUR_ADDRESS"
 
 # Systemd service
 sudo tee /etc/systemd/system/tensorium-miner.service &lt;&lt;EOF
@@ -387,7 +387,7 @@ After=tensorium-rpc.service
 [Service]
 Type=simple
 User=$(whoami)
-ExecStart=/usr/local/bin/txmminer 127.0.0.1:23332 YOUR_TXM_ADDRESS
+ExecStart=/usr/local/bin/txmminer 127.0.0.1:33332 YOUR_TXM_ADDRESS
 Restart=always
 RestartSec=5
 
@@ -466,29 +466,29 @@ txmwallet balance
 
       <h3>7.2 RPC API Reference</h3>
       <pre># Health check
-curl http://localhost:23332/health
+curl http://localhost:33332/health
 
 # Block count
-curl http://localhost:23332/getblockcount
+curl http://localhost:33332/getblockcount
 
 # Current difficulty
-curl http://localhost:23332/getdifficulty
+curl http://localhost:33332/getdifficulty
 
 # Get block by height
-curl http://localhost:23332/getblock/0      # genesis
-curl http://localhost:23332/getblock/100
+curl http://localhost:33332/getblock/0      # genesis
+curl http://localhost:33332/getblock/100
 
 # Mempool info
-curl http://localhost:23332/getmempoolinfo
+curl http://localhost:33332/getmempoolinfo
 
 # Block template (for custom miner integration)
-curl http://localhost:23332/getblocktemplate/txm1youraddress
+curl http://localhost:33332/getblocktemplate/txm1youraddress
 
 # Peer ban list
-curl http://localhost:23332/getbanlist
+curl http://localhost:33332/getbanlist
 
 # Unban an IP
-curl http://localhost:23332/unban/1.2.3.4</pre>
+curl http://localhost:33332/unban/1.2.3.4</pre>
 
       <h3>7.3 Sending Transactions</h3>
       <pre>export TENSORIUM_WALLET=~/tensorium-node/wallet.json
@@ -499,14 +499,14 @@ export TENSORIUM_STATE=~/tensorium-node/state.json
 txmwallet send txm1recipient_address 100000000 /tmp/my-tx.json
 
 # Broadcast to your node
-txmwallet broadcast /tmp/my-tx.json 127.0.0.1:23332</pre>
+txmwallet broadcast /tmp/my-tx.json 127.0.0.1:33332</pre>
 
       <h3>7.4 Node Commands Reference</h3>
-      <pre>tensorium-node init                      # Initialize genesis block
+      <pre>tensorium-node mainnet-candidate init                      # Initialize genesis block
 tensorium-node status                    # Show chain tip and height
-tensorium-node rpc [bind]                # Start HTTP RPC (default 127.0.0.1:23332)
-tensorium-node p2p-listen [bind]         # Start P2P server (default 0.0.0.0:23333)
-tensorium-node sync [host:port]          # Download missing blocks from a peer
+tensorium-node mainnet-candidate rpc [bind]                # Start HTTP RPC (default 127.0.0.1:33332)
+tensorium-node mainnet-candidate p2p-listen [bind]         # Start P2P server (default 0.0.0.0:33333)
+tensorium-node mainnet-candidate sync [host:port]          # Download missing blocks from a peer
 tensorium-node p2p-connect &lt;host:port&gt;  # Diagnostic handshake to a peer
 tensorium-node peers                     # Print configured peers
 tensorium-node banlist                   # Show peer ban list
@@ -540,7 +540,7 @@ tensorium-node unban &lt;ip&gt;               # Remove a ban</pre>
           Why does genesis init take so long? <span>+</span>
         </div>
         <div class="faq-a">
-          It should not anymore on the current public testnet. The genesis block is now hardcoded for fast onboarding, so <code>tensorium-node init</code> should be effectively instant. If init is still slow, you are probably on an older binary or older chain mode.
+          It should not anymore on the current public testnet. The genesis block is now hardcoded for fast onboarding, so <code>tensorium-node mainnet-candidate init</code> should be effectively instant. If init is still slow, you are probably on an older binary or older chain mode.
         </div>
       </div>
 
@@ -558,7 +558,7 @@ tensorium-node unban &lt;ip&gt;               # Remove a ban</pre>
           What is the seed node and do I need to keep it connected? <span>+</span>
         </div>
         <div class="faq-a">
-          The seed node at 157.230.44.162:23333 is the bootstrap node run by the Tensorium team. You need it to sync your initial chain state and to broadcast your mined blocks. Set TENSORIUM_PEERS=157.230.44.162:23333 in your RPC service for automatic block propagation.
+          The seed node at seed.tensoriumlabs.com:33333 is the bootstrap node run by the Tensorium team. You need it to sync your initial chain state and to broadcast your mined blocks. Set TENSORIUM_PEERS=seed.tensoriumlabs.com:33333 in your RPC service for automatic block propagation.
         </div>
       </div>
 

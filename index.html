@@ -74,7 +74,7 @@
       <p class="doc-subtitle">A transparent, community-minable Layer 1 blockchain with SHA256d consensus, a UTXO ledger, and a staged path from public testnet to GPU-first mainnet-candidate launch.</p>
       <div class="doc-meta">
         <span>📅 Version 2.0 — June 2026</span>
-        <span>🔗 Testnet: <code>tensorium-testnet-0</code></span>
+        <span>🔗 Testnet: <code>tensorium-mainnet-candidate-0</code></span>
         <span>💎 Ticker: <code>TXM</code></span>
         <span>🏗 Status: Phase 8 soak test in progress</span>
       </div>
@@ -141,7 +141,7 @@
       <pre>{
   "header": {
     "version":           1,
-    "chain_id":          "tensorium-testnet-0",
+    "chain_id":          "tensorium-mainnet-candidate-0",
     "height":            uint64,
     "previous_hash":     Hash256,
     "merkle_root":       Hash256,
@@ -215,7 +215,7 @@ new_difficulty = old_difficulty + 1   if ratio &lt; 1.0  (blocks too fast)
       <p>When a higher-work chain is received, the node performs a <strong>chain reorganization</strong>: it identifies the common ancestor, reverts blocks from the old tip back to the fork point, and applies the new chain's blocks. Reorg depth is logged to allow monitoring.</p>
 
       <h3>3.4 Genesis Block</h3>
-      <p>The public testnet genesis block has a fixed timestamp (<code>1,748,649,600</code>) ensuring every node that runs <code>tensorium-node init</code> produces the identical genesis block hash:</p>
+      <p>The public testnet genesis block has a fixed timestamp (<code>1,748,649,600</code>) ensuring every node that runs <code>tensorium-node mainnet-candidate init</code> produces the identical genesis block hash:</p>
       <pre>Genesis hash: 00000035d8a99c0900fec5daa3ef5a7c2d71c7140e473d239a24b0dd4cd7f6c3
 Timestamp:    2025-05-30 16:00:00 UTC
 Nonce:        95,202,247
@@ -335,8 +335,8 @@ Chain ID:                      tensorium-mainnet-candidate-0</pre>
       <pre>txmminer &lt;rpc&gt; &lt;address&gt; [threads]
 
 # Examples:
-txmminer 127.0.0.1:23332 txm1youraddress          # auto-detect cores
-txmminer 127.0.0.1:23332 txm1youraddress 8         # use 8 threads</pre>
+txmminer 127.0.0.1:33332 txm1youraddress          # auto-detect cores
+txmminer 127.0.0.1:33332 txm1youraddress 8         # use 8 threads</pre>
 
       <div class="table-wrap">
         <table>
@@ -386,7 +386,7 @@ txmminer 127.0.0.1:23332 txm1youraddress 8         # use 8 threads</pre>
 {
   "protocol":  "tensorium-p2p",
   "version":   1,
-  "chain_id":  "tensorium-testnet-0",
+  "chain_id":  "tensorium-mainnet-candidate-0",
   "node_id":   "node-name",
   "height":    uint64,
   "tip_hash":  Hash256
@@ -431,8 +431,8 @@ txmminer 127.0.0.1:23332 txm1youraddress 8         # use 8 threads</pre>
         <table>
           <thead><tr><th>Port</th><th>Protocol</th><th>Purpose</th><th>Exposure</th></tr></thead>
           <tbody>
-            <tr><td><code>23333</code></td><td>TCP</td><td>P2P node communication</td><td>Public — open in firewall</td></tr>
-            <tr><td><code>23332</code></td><td>TCP/HTTP</td><td>RPC API</td><td>Localhost only — do not expose</td></tr>
+            <tr><td><code>33333</code></td><td>TCP</td><td>P2P node communication</td><td>Public — open in firewall</td></tr>
+            <tr><td><code>33332</code></td><td>TCP/HTTP</td><td>RPC API</td><td>Localhost only — do not expose</td></tr>
           </tbody>
         </table>
       </div>

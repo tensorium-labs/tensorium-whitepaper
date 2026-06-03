@@ -74,15 +74,15 @@
       <p class="doc-subtitle">A transparent, community-minable Layer 1 blockchain with SHA256d consensus, a UTXO ledger, and a staged path from public testnet to GPU-first mainnet-candidate launch.</p>
       <div class="doc-meta">
         <span>📅 Version 2.0 — June 2026</span>
-        <span>🔗 Testnet: <code>tensorium-mainnet-candidate-0</code></span>
+        <span>🔗 Mainnet: <code>tensorium-mainnet-candidate-0</code></span>
         <span>💎 Ticker: <code>TXM</code></span>
-        <span>🏗 Status: Phase 8 soak test in progress</span>
+        <span>🌐 Status: MAINNET LIVE — 2026-06-02</span>
       </div>
     </div>
 
     <!-- Abstract -->
     <div class="abstract" id="abstract">
-      <strong>Abstract.</strong> Tensorium is an open-source Proof-of-Work Layer 1 blockchain implemented in Rust. It uses SHA256d as its consensus algorithm, a UTXO-based ledger, and a deterministic halving emission schedule capped at 33,000,000 TXM. The network is designed for fair-launch community mining, starting with CPU-accessible bootstrap mining on testnet and targeting GPU-first mining on mainnet. This document describes the technical architecture, consensus mechanism, tokenomics, P2P protocol, and development roadmap of the Tensorium network.
+      <strong>Abstract.</strong> Tensorium is an open-source Proof-of-Work Layer 1 blockchain implemented in Rust. It uses SHA256d as its consensus algorithm, a UTXO-based ledger, and a deterministic halving emission schedule capped at 33,000,000 TXM total (8,000,000 pre-mint + 25,000,000 mining). The mainnet (<code>tensorium-mainnet-candidate-0</code>) launched 2026-06-02 with a GPU-first posture (40-bit initial difficulty) and an Era 1 block reward of 11.9027 TXM. The network includes a live bridge to Optimism (wTXM), a Uniswap V4 liquidity pool, and a reference mining pool. This document describes the technical architecture, consensus mechanism, tokenomics, P2P protocol, and development roadmap of the Tensorium network.
     </div>
 
     <!-- 1. Introduction -->
@@ -95,23 +95,23 @@
 
       <h3>1.2 Design Principles</h3>
       <ul>
-        <li><strong>Fair launch over hype.</strong> Public testnet and mainnet-candidate preparation run before mainnet. No private allocation beyond the declared 1,000,000 TXM founder reserve.</li>
-        <li><strong>GPU-first mining.</strong> The current public testnet includes CUDA mining at GPU-first difficulty. Mainnet-candidate launch remains gated on Phase 8 pre-launch checks.</li>
-        <li><strong>Open source, always.</strong> All node, miner, and wallet code is published under an open license.</li>
+        <li><strong>Fair launch over hype.</strong> Public testnet ran before mainnet. No private allocation beyond the declared pre-mint (founder + liquidity + ecosystem reserves, 8,000,000 TXM total).</li>
+        <li><strong>GPU-first mining.</strong> Mainnet launched with 40-bit initial difficulty — GPU required. CPU mining is diagnostic only.</li>
+        <li><strong>Open source, always.</strong> All node, miner, and wallet code is published under an open license (Apache-2.0).</li>
         <li><strong>Self-custody.</strong> Users control their own keys. No custodial wallets.</li>
-        <li><strong>Security before speed.</strong> Consensus rules are frozen before mainnet. No shortcuts.</li>
+        <li><strong>Security before speed.</strong> Consensus rules were frozen before mainnet launch on 2026-06-02. No shortcuts.</li>
       </ul>
 
       <h3>1.3 Scope of This Document</h3>
-      <p>This whitepaper covers the protocol design, consensus mechanism, tokenomics, and roadmap of the Tensorium network as of its public testnet launch. It is a living document and will be updated as the protocol evolves toward mainnet.</p>
+      <p>This whitepaper covers the protocol design, consensus mechanism, tokenomics, and roadmap of the Tensorium network. Mainnet launched 2026-06-02. This is a living document and will be updated as the protocol evolves.</p>
 
       <h3>1.4 Current Public Surfaces</h3>
       <p>Tensorium is no longer just a node binary and a miner. The current public stack already includes the operational surfaces needed for testing, onboarding, and later ecosystem growth:</p>
       <ul>
         <li><strong>Explorer.</strong> <a href="https://explorer.tensoriumlabs.com" target="_blank">explorer.tensoriumlabs.com</a> for blocks, transactions, addresses, mempool, and basic chain charts.</li>
         <li><strong>Faucet.</strong> <a href="https://faucet.tensoriumlabs.com" target="_blank">faucet.tensoriumlabs.com</a> for low-friction testnet onboarding after the 2026-06-01 reset.</li>
-        <li><strong>Pool website.</strong> <a href="https://pooltxm.tensoriumlabs.com" target="_blank">pooltxm.tensoriumlabs.com</a> for the reference pool, fee disclosure, and miner-facing stats.</li>
-        <li><strong>Bridge and OTC surfaces.</strong> <a href="https://bridge.tensoriumlabs.com" target="_blank">bridge.tensoriumlabs.com</a> and <a href="https://otc.tensoriumlabs.com" target="_blank">otc.tensoriumlabs.com</a> define the early liquidity and transfer roadmap for Phase 9.</li>
+        <li><strong>Pool website.</strong> <a href="https://pooltxm.tensoriumlabs.com" target="_blank">pooltxm.tensoriumlabs.com</a> for the reference pool, 5% fee disclosure, and miner-facing stats. Pool mining: <code>txmminer-cuda pooltxm.tensoriumlabs.com:23336 &lt;address&gt;</code></li>
+        <li><strong>Bridge and DEX.</strong> <a href="https://bridge.tensoriumlabs.com" target="_blank">bridge.tensoriumlabs.com</a> — live bridge to Optimism (wTXM at <code>0x2e71FD45530FAe75B6b427F3e71A0CDEB146C20e</code>). Uniswap V4 wTXM/ETH pool live on OP Mainnet. <a href="https://otc.tensoriumlabs.com" target="_blank">otc.tensoriumlabs.com</a> for OTC trades.</li>
         <li><strong>Browser wallet.</strong> A Chrome-compatible wallet extension is implemented in <a href="https://github.com/tensorium-labs/tensorium-wallet-extension" target="_blank">tensorium-wallet-extension</a>; Chrome Web Store submission is still pending.</li>
       </ul>
     </div>
@@ -197,14 +197,14 @@ new_difficulty = old_difficulty + 1   if ratio &lt; 1.0  (blocks too fast)
 
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Parameter</th><th>Testnet</th><th>Mainnet Candidate</th></tr></thead>
+          <thead><tr><th>Parameter</th><th>Mainnet (<code>tensorium-mainnet-candidate-0</code>)</th></tr></thead>
           <tbody>
-            <tr><td>Initial difficulty</td><td>26 bits</td><td>36 bits</td></tr>
-            <tr><td>Min difficulty</td><td>20 bits</td><td>28 bits</td></tr>
-            <tr><td>Max difficulty</td><td>40 bits</td><td>56 bits</td></tr>
-            <tr><td>Adjustment window</td><td>60 blocks</td><td>120 blocks</td></tr>
-            <tr><td>Max adjustment</td><td>±1 bit/window</td><td>±1 bit/window</td></tr>
-            <tr><td>Target block time</td><td>60 seconds</td><td>60 seconds</td></tr>
+            <tr><td>Initial difficulty</td><td>40 bits (GPU required)</td></tr>
+            <tr><td>Min difficulty</td><td>32 bits</td></tr>
+            <tr><td>Max difficulty</td><td>56 bits</td></tr>
+            <tr><td>Adjustment window</td><td>120 blocks</td></tr>
+            <tr><td>Max adjustment</td><td>±1 bit/window</td></tr>
+            <tr><td>Target block time</td><td>60 seconds</td></tr>
           </tbody>
         </table>
       </div>
@@ -215,16 +215,13 @@ new_difficulty = old_difficulty + 1   if ratio &lt; 1.0  (blocks too fast)
       <p>When a higher-work chain is received, the node performs a <strong>chain reorganization</strong>: it identifies the common ancestor, reverts blocks from the old tip back to the fork point, and applies the new chain's blocks. Reorg depth is logged to allow monitoring.</p>
 
       <h3>3.4 Genesis Block</h3>
-      <p>The public testnet genesis block has a fixed timestamp (<code>1,748,649,600</code>) ensuring every node that runs <code>tensorium-node mainnet-candidate init</code> produces the identical genesis block hash:</p>
-      <pre>Genesis hash: 00000035d8a99c0900fec5daa3ef5a7c2d71c7140e473d239a24b0dd4cd7f6c3
-Timestamp:    2025-05-30 16:00:00 UTC
-Nonce:        95,202,247
-Difficulty:   26 bits</pre>
-      <p>The mainnet-candidate genesis is also hardcoded in <code>v0.3.1-mainnet-candidate</code> for pre-launch validation:</p>
-      <pre>Mainnet-candidate genesis hash: 000000000063ab6f057a16376b1712e709719126ad977a3d4be23f83b89f0392
-Timestamp:                     2026-06-01 00:00:00 UTC
-Nonce:                         114,103,168,481
-Chain ID:                      tensorium-mainnet-candidate-0</pre>
+      <p>The mainnet genesis block is hardcoded in <code>v0.3.1-mainnet-candidate</code>. Running <code>tensorium-node mainnet-candidate init</code> produces the identical genesis block hash on every node:</p>
+      <pre>Genesis hash: 0000000000269b71601aded6dda2991df6f88b67ac2bef13dff56f4f8a94dfae
+Timestamp:    2026-06-01 00:00:00 UTC  (1,780,272,000)
+Nonce:        1,936,263,118,035
+Difficulty:   40 bits
+Chain ID:     tensorium-mainnet-candidate-0
+Mined:        RTX 5090, 4.64 GH/s, 474 seconds (2026-06-02)</pre>
     </div>
 
     <!-- 4. Tokenomics -->
@@ -240,18 +237,18 @@ Chain ID:                      tensorium-mainnet-candidate-0</pre>
         </div>
         <div class="spec-item">
           <div class="spec-label">Mining Allocation</div>
-          <div class="spec-value">32,000,000</div>
-          <div class="spec-sub">TXM (96.97%) via block rewards</div>
+          <div class="spec-value">25,000,000</div>
+          <div class="spec-sub">TXM (75.76%) via block rewards</div>
         </div>
         <div class="spec-item">
-          <div class="spec-label">Founder Allocation</div>
-          <div class="spec-value">1,000,000</div>
-          <div class="spec-sub">TXM (3.03%) — declared, no hidden premine</div>
+          <div class="spec-label">Pre-mint Allocation</div>
+          <div class="spec-value">8,000,000</div>
+          <div class="spec-sub">TXM (24.24%) — founder + liquidity + ecosystem reserves</div>
         </div>
         <div class="spec-item">
           <div class="spec-label">Initial Block Reward</div>
-          <div class="spec-value">15.23557865</div>
-          <div class="spec-sub">TXM per block (Era 1)</div>
+          <div class="spec-value">11.9027</div>
+          <div class="spec-sub">TXM per block (Era 1, 1,190,279,581 atoms)</div>
         </div>
         <div class="spec-item">
           <div class="spec-label">Block Time</div>
@@ -272,16 +269,16 @@ Chain ID:                      tensorium-mainnet-candidate-0</pre>
         <div class="era-row" style="font-size:11px;color:var(--text3);font-weight:600;border-bottom:1px solid var(--border2)">
           <span>ERA</span><span>REWARD / BLOCK</span><span></span><span>ERA TOTAL</span>
         </div>
-        <div class="era-row"><span class="era-num">1</span><span class="era-reward">15.23557865</span><div class="era-bar-wrap"><div class="era-bar" style="width:100%"></div></div><span class="era-pct">~16.02M TXM</span></div>
-        <div class="era-row"><span class="era-num">2</span><span class="era-reward">7.61778932</span><div class="era-bar-wrap"><div class="era-bar" style="width:50%"></div></div><span class="era-pct">~8.01M TXM</span></div>
-        <div class="era-row"><span class="era-num">3</span><span class="era-reward">3.80889466</span><div class="era-bar-wrap"><div class="era-bar" style="width:25%"></div></div><span class="era-pct">~4.01M TXM</span></div>
-        <div class="era-row"><span class="era-num">4</span><span class="era-reward">1.90444733</span><div class="era-bar-wrap"><div class="era-bar" style="width:12.5%"></div></div><span class="era-pct">~2.00M TXM</span></div>
-        <div class="era-row"><span class="era-num">5</span><span class="era-reward">0.95222366</span><div class="era-bar-wrap"><div class="era-bar" style="width:6.25%"></div></div><span class="era-pct">~1.00M TXM</span></div>
-        <div class="era-row"><span class="era-num">6</span><span class="era-reward">0.47611183</span><div class="era-bar-wrap"><div class="era-bar" style="width:3.13%"></div></div><span class="era-pct">~500K TXM</span></div>
-        <div class="era-row"><span class="era-num">7</span><span class="era-reward">0.23805591</span><div class="era-bar-wrap"><div class="era-bar" style="width:1.56%"></div></div><span class="era-pct">~250K TXM</span></div>
-        <div class="era-row"><span class="era-num">8</span><span class="era-reward">0.11902795</span><div class="era-bar-wrap"><div class="era-bar" style="width:0.78%"></div></div><span class="era-pct">~125K TXM</span></div>
-        <div class="era-row"><span class="era-num">9</span><span class="era-reward">0.05951397</span><div class="era-bar-wrap"><div class="era-bar" style="width:0.39%"></div></div><span class="era-pct">~63K TXM</span></div>
-        <div class="era-row"><span class="era-num">10</span><span class="era-reward">0.02975699</span><div class="era-bar-wrap"><div class="era-bar" style="width:0.2%"></div></div><span class="era-pct">~31K TXM</span></div>
+        <div class="era-row"><span class="era-num">1</span><span class="era-reward">11.9027</span><div class="era-bar-wrap"><div class="era-bar" style="width:100%"></div></div><span class="era-pct">~12.51M TXM</span></div>
+        <div class="era-row"><span class="era-num">2</span><span class="era-reward">5.9514</span><div class="era-bar-wrap"><div class="era-bar" style="width:50%"></div></div><span class="era-pct">~6.25M TXM</span></div>
+        <div class="era-row"><span class="era-num">3</span><span class="era-reward">2.9757</span><div class="era-bar-wrap"><div class="era-bar" style="width:25%"></div></div><span class="era-pct">~3.13M TXM</span></div>
+        <div class="era-row"><span class="era-num">4</span><span class="era-reward">1.4878</span><div class="era-bar-wrap"><div class="era-bar" style="width:12.5%"></div></div><span class="era-pct">~1.56M TXM</span></div>
+        <div class="era-row"><span class="era-num">5</span><span class="era-reward">0.7439</span><div class="era-bar-wrap"><div class="era-bar" style="width:6.25%"></div></div><span class="era-pct">~0.78M TXM</span></div>
+        <div class="era-row"><span class="era-num">6</span><span class="era-reward">0.3720</span><div class="era-bar-wrap"><div class="era-bar" style="width:3.13%"></div></div><span class="era-pct">~391K TXM</span></div>
+        <div class="era-row"><span class="era-num">7</span><span class="era-reward">0.1860</span><div class="era-bar-wrap"><div class="era-bar" style="width:1.56%"></div></div><span class="era-pct">~195K TXM</span></div>
+        <div class="era-row"><span class="era-num">8</span><span class="era-reward">0.0930</span><div class="era-bar-wrap"><div class="era-bar" style="width:0.78%"></div></div><span class="era-pct">~98K TXM</span></div>
+        <div class="era-row"><span class="era-num">9</span><span class="era-reward">0.0465</span><div class="era-bar-wrap"><div class="era-bar" style="width:0.39%"></div></div><span class="era-pct">~49K TXM</span></div>
+        <div class="era-row"><span class="era-num">10</span><span class="era-reward">0.0232</span><div class="era-bar-wrap"><div class="era-bar" style="width:0.2%"></div></div><span class="era-pct">~24K TXM</span></div>
       </div>
 
       <div class="callout callout-info" style="margin-top:16px">
@@ -289,13 +286,13 @@ Chain ID:                      tensorium-mainnet-candidate-0</pre>
         <div class="callout-body"><strong>50% mined in Era 1.</strong> This follows Bitcoin's emission model — most coins are distributed early, incentivizing early miners and securing the network bootstrap. By year 4 (~Era 2), ~75% of mining supply will have been distributed.</div>
       </div>
 
-      <h3>4.3 Founder Allocation</h3>
-      <p>1,000,000 TXM (3.03% of total supply) is reserved for the founding team. This allocation:</p>
+      <h3>4.3 Pre-mint Allocation (Tokenomics v2)</h3>
+      <p>8,000,000 TXM (24.24% of total supply) is pre-minted at genesis across founder, liquidity, and ecosystem reserves. This allocation is separate from the 25,000,000 TXM mining supply. Key properties:</p>
       <ul>
-        <li>Is declared publicly in the mainnet-candidate genesis block and codebase</li>
-        <li>Is separate from the 32,000,000 TXM mining allocation</li>
-        <li>Uses a 24-month voluntary social/manual lock: no more than 10% may move in any single calendar month for the first 24 months</li>
-        <li>Is <strong>not</strong> locked by L1 consensus; the lock is a published social commitment</li>
+        <li>Declared publicly in the mainnet genesis block and codebase before mainnet launch</li>
+        <li>Founder cold wallet (<code>txm18c3t652j0x0sanux3dhse8fqgrqpsdzx97358d</code>): 24-month voluntary social/manual lock — no more than 10% may move in any single calendar month</li>
+        <li>Liquidity wallet (<code>txm1uyy0sfm07p47f8dy0mvdtwfefya8w5y2qr0q8p</code>): 500K TXM deployed to Uniswap V4 wTXM/ETH pool at launch; reserve tranches under 2-year and 5-year voluntary social locks</li>
+        <li>Locks are <strong>not</strong> enforced by L1 consensus; they are published social commitments — all movements are visible on-chain</li>
         <li>Has no impact on block validation or consensus rules</li>
       </ul>
 
@@ -349,9 +346,9 @@ txmminer 127.0.0.1:33332 txm1youraddress 8         # use 8 threads</pre>
         </table>
       </div>
 
-      <div class="callout callout-warn">
-        <span class="callout-icon">⚠</span>
-        <div class="callout-body"><strong>Testnet only.</strong> Testnet TXM has no monetary value. Current public testnet mining is GPU-first at 36 bits; CPU mining remains useful for local validation.</div>
+      <div class="callout callout-info">
+        <span class="callout-icon">ℹ</span>
+        <div class="callout-body"><strong>Mainnet is LIVE.</strong> Mainnet mining is GPU-first at 40 bits initial difficulty. <code>txmminer</code> (CPU) is for development/diagnostic use only and cannot mine at mainnet difficulty. Use <code>txmminer-cuda</code> for real mining.</div>
       </div>
 
       <h3>5.3 GPU-First Mining</h3>
@@ -456,15 +453,16 @@ txmminer 127.0.0.1:33332 txm1youraddress 8         # use 8 threads</pre>
 
       <div class="callout callout-warn">
         <span class="callout-icon">⚠</span>
-        <div class="callout-body"><strong>Testnet warning.</strong> This software has not undergone a third-party security audit. Do not use testnet code for mainnet, real funds, or production mining. A security audit is required before mainnet launch.</div>
+        <div class="callout-body"><strong>Security audit deferred.</strong> This software has not undergone a third-party security audit. Mainnet is live but an external audit is recommended before significant economic value accumulates. All source code is open for community review at <a href="https://github.com/tensorium-labs/tensorium-core" target="_blank">github.com/tensorium-labs/tensorium-core</a>.</div>
       </div>
 
-      <h3>7.5 Pre-Mainnet Requirements</h3>
+      <h3>7.5 Post-Mainnet Security Posture</h3>
       <ul>
-        <li>Extended soak test of mainnet-candidate node and pool services</li>
-        <li>Stable GPU-first public testnet without consensus bugs</li>
-        <li>Static site and wallet distribution surfaces kept consistent with the current release state</li>
-        <li>Published risk disclosure, founder lock policy, pool fee policy, and genesis parameters before public launch</li>
+        <li>Mainnet launched 2026-06-02; soak testing has been ongoing since 2026-06-01</li>
+        <li>RPC is localhost-only by default; public RPC is reverse-proxied and rate-limited via nginx</li>
+        <li>Founder and treasury cold wallets are stored offline, separate from the seed node</li>
+        <li>Risk disclosure, founder lock policy, pool fee policy, and genesis parameters are publicly published</li>
+        <li>External security audit planned for a future phase</li>
       </ul>
     </div>
 
@@ -530,24 +528,24 @@ txmminer 127.0.0.1:33332 txm1youraddress 8         # use 8 threads</pre>
           </div>
         </div>
         <div class="phase">
-          <div class="phase-dot active">8</div>
+          <div class="phase-dot done">8</div>
           <div>
-            <div class="phase-title">Phase 8 — Pre-Launch <span class="phase-tag active">Doing</span></div>
-            <div class="phase-desc">Phases 8A-8D are complete: MC seed infrastructure, Chrome wallet implementation, faucet/pool/landing pages, docs sync, and license work. Phase 8E soak testing remains in progress before any public mainnet-candidate announcement.</div>
+            <div class="phase-title">Phase 8 — Pre-Launch <span class="phase-tag done">Done</span></div>
+            <div class="phase-desc">All Phase 8 gates passed. MC seed infrastructure, Chrome wallet, faucet/pool/landing pages, docs sync, license work, and soak test complete. Mainnet declared live 2026-06-02.</div>
           </div>
         </div>
         <div class="phase">
-          <div class="phase-dot pending">9</div>
+          <div class="phase-dot done">9</div>
           <div>
-            <div class="phase-title">Phase 9 — Ecosystem <span class="phase-tag">Todo</span></div>
-            <div class="phase-desc">Bridge beta operations, OTC iteration, explorer polish, JS/Python SDKs, developer docs, browser-wallet distribution, and early listing or liquidity preparation around TXM.</div>
+            <div class="phase-title">Phase 9 — Ecosystem <span class="phase-tag done">Done</span></div>
+            <div class="phase-desc">Bridge live on Optimism (wTXM), Uniswap V4 pool live, JS/Python SDKs published, explorer indexer complete, Discord community live, CEX outreach sent to 14 exchanges.</div>
           </div>
         </div>
         <div class="phase">
-          <div class="phase-dot pending">10</div>
+          <div class="phase-dot active">10</div>
           <div>
-            <div class="phase-title">Phase 10 — Advanced Protocol <span class="phase-tag">Todo</span></div>
-            <div class="phase-desc">Formal EVM bridge architecture, deeper explorer indexing, storage-engine upgrades beyond JSON state, governance or scripting experiments, and longer-horizon protocol hardening.</div>
+            <div class="phase-title">Phase 10 — Protocol &amp; Listings <span class="phase-tag active">In Progress</span></div>
+            <div class="phase-desc">Scripting layer (S1 complete), CEX listings, CMC/CoinGecko submission (after Uniswap pool confirmed), deeper explorer indexing, governance experiments, and longer-horizon protocol hardening.</div>
           </div>
         </div>
       </div>
@@ -556,9 +554,9 @@ txmminer 127.0.0.1:33332 txm1youraddress 8         # use 8 threads</pre>
     <!-- Disclaimer -->
     <div class="section" id="disclaimer">
       <h2 class="section-title"><span class="section-num">—</span> Disclaimer</h2>
-      <p>This document is provided for informational purposes only. Tensorium is experimental software in active development. <strong>Testnet TXM has no monetary value.</strong> Do not invest money based on testnet activity.</p>
-      <p>The authors make no warranties regarding the software's fitness for any particular purpose, security properties, or continued availability. All consensus parameters, tokenomics figures, and roadmap timelines are subject to change based on technical findings.</p>
-      <p>This is not financial advice. Participation in mainnet mining involves real risk. Always conduct your own research.</p>
+      <p>This document is provided for informational purposes only. Tensorium is experimental software in active development. Mainnet is live — mining rewards are real TXM with real economic value. Participate only if you understand the risks.</p>
+      <p>The authors make no warranties regarding the software's fitness for any particular purpose, security properties, or continued availability. This software has not undergone a third-party security audit.</p>
+      <p>This is not financial advice. Participation in mainnet mining, bridging, or liquidity provision involves real risk. Always conduct your own research. See the full <a href="https://github.com/tensorium-labs/tensorium-core/blob/main/docs/project/RISK_DISCLOSURE.md" target="_blank">Risk Disclosure</a>.</p>
       <div class="callout callout-success" style="margin-top:24px">
         <span class="callout-icon">✓</span>
         <div class="callout-body">The source code for all Tensorium software is open and auditable at <a href="https://github.com/tensorium-labs/tensorium-core" target="_blank">github.com/tensorium-labs/tensorium-core</a>. If you find a bug, please open an issue.</div>

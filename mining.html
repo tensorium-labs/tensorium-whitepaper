@@ -101,7 +101,7 @@
         <div class="step-card">
           <div class="step-num">04</div>
           <div class="step-title">Mine</div>
-          <div class="step-desc">Run txmminer and start earning block rewards.</div>
+          <div class="step-desc">Run <code>txmminer-cuda</code> and start earning block rewards.</div>
         </div>
       </div>
     </div>
@@ -126,7 +126,7 @@
 
       <div class="callout callout-info">
         <span class="callout-icon">ℹ</span>
-        <div class="callout-body"><strong>GPU required for mainnet.</strong> Mainnet runs at 40-bit difficulty — a GPU (RTX 3000+ recommended) is required. <code>txmminer</code> (CPU) is for development/diagnostic only and cannot mine at mainnet difficulty. Use <code>txmminer-cuda</code>.</div>
+        <div class="callout-body"><strong>GPU required for mainnet.</strong> Mainnet runs at 40-bit difficulty — a GPU (RTX 3000+ recommended) is required. GPU (RTX 3000+) required. Use <code>txmminer-cuda</code>.</div>
       </div>
     </div>
 
@@ -141,7 +141,7 @@
 
       <p>The installer will:</p>
       <ol>
-        <li>Download <code>tensorium-node</code>, <code>txmminer</code>, <code>txmwallet</code> to <code>/usr/local/bin/</code></li>
+        <li>Download <code>tensorium-node</code>, <code>txmminer-cuda</code>, <code>txmwallet</code> to <code>/usr/local/bin/</code></li>
         <li>Prompt you for a wallet passphrase and create a wallet at <code>~/tensorium-node/wallet.json</code></li>
         <li>Initialize the chain (genesis block) and sync from the seed node</li>
         <li>Optionally install systemd services for auto-start on reboot</li>
@@ -174,7 +174,7 @@ cd tensorium-core
 cargo build --release
 
 # Binaries will be in target/release/
-sudo cp target/release/tensorium-node target/release/txmminer target/release/txmwallet /usr/local/bin/</pre>
+sudo cp target/release/tensorium-node target/release/txmminer-cuda target/release/txmwallet /usr/local/bin/</pre>
     </div>
 
     <!-- 3. Wallet -->
@@ -204,7 +204,7 @@ export TENSORIUM_WALLET_PASSPHRASE="your-passphrase"
 txmwallet getnewaddress
 # → txm1abc123xyz...   (your TXM address)</pre>
 
-      <p>Save this address — you will provide it to <code>txmminer</code> so block rewards go to your wallet.</p>
+      <p>Save this address — you will provide it to <code>txmminer-cuda</code> so block rewards go to your wallet.</p>
 
       <h3>3.3 Backup Your Wallet</h3>
 
@@ -341,7 +341,7 @@ txmminer-cuda pooltxm.tensoriumlabs.com:23336 "$YOUR_ADDRESS"</pre>
 
       <div class="callout callout-info">
         <span class="callout-icon">💡</span>
-        <div class="callout-body"><strong>Solo vs Pool.</strong> Solo mining (connect to your own node:33332) earns the full block reward with 0% fee. Pool mining (pooltxm.tensoriumlabs.com:23336) charges 5% but provides smoothed payouts without running your own node. CPU mining via <code>txmminer</code> cannot mine at mainnet difficulty (40 bits) and is for development use only.</div>
+        <div class="callout-body"><strong>Solo vs Pool.</strong> Solo mining (connect to your own node:33332) earns the full block reward with 0% fee. Pool mining (pooltxm.tensoriumlabs.com:23336) charges 5% but provides smoothed payouts without running your own node. </div>
       </div>
 
       <h3>5.3 Expected Hashrate by GPU</h3>
@@ -523,7 +523,7 @@ txmminer-cuda pooltxm.tensoriumlabs.com:23336 YOUR_ADDRESS  # pool — 5% fee</p
           Do I need a GPU to mine? <span>+</span>
         </div>
         <div class="faq-a">
-          Yes. Mainnet runs at 40-bit initial difficulty — a GPU (RTX 3000+ recommended) is required. <code>txmminer</code> (CPU) cannot mine at mainnet difficulty and is for development use only. Download <code>txmminer-cuda</code> from the <a href="https://github.com/tensorium-labs/tensorium-core/releases" target="_blank">latest release</a>.
+          Yes. Mainnet runs at 40-bit initial difficulty — a GPU (RTX 3000+ recommended) is required. Download <code>txmminer-cuda</code> from the <a href="https://github.com/tensorium-labs/tensorium-core/releases" target="_blank">latest release</a>.
         </div>
       </div>
 

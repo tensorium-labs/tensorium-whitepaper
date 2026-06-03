@@ -128,9 +128,8 @@
           <thead><tr><th>Binary</th><th>Role</th><th>Language</th></tr></thead>
           <tbody>
             <tr><td><code>tensorium-node</code></td><td>Full node — validates blocks, maintains chain state, exposes RPC, participates in P2P</td><td>Rust</td></tr>
-            <tr><td><code>txmminer</code></td><td>CPU miner — fetches block template, finds valid nonce, submits via RPC</td><td>Rust</td></tr>
             <tr><td><code>txmwallet</code></td><td>CLI wallet — generates keys, signs transactions, checks balance</td><td>Rust</td></tr>
-            <tr><td><em>txmminer-cuda</em></td><td>GPU miner (Phase 6) — CUDA-accelerated SHA256d mining</td><td>Rust + CUDA</td></tr>
+            <tr><td><code>txmminer-cuda</code></td><td>GPU miner — CUDA-accelerated SHA256d mining, required for mainnet</td><td>Rust + CUDA</td></tr>
           </tbody>
         </table>
       </div>
@@ -326,33 +325,16 @@ Mined:        RTX 5090, 4.64 GH/s, 474 seconds (2026-06-02)</pre>
         <li><strong>Submit</strong> — the mined block is submitted to the node via <code>POST /submitblock</code>, which validates, stores, and broadcasts it to peers.</li>
       </ol>
 
-      <h3>5.2 Solo Mining</h3>
-      <p>The <code>txmminer</code> binary provides multi-threaded CPU mining for protocol testing. Practical public testnet mining uses the CUDA miner at GPU-first difficulty.</p>
+      <h3>5.2 Solo Mining (GPU)</h3>
+      <p>Mainnet difficulty starts at 40 bits — a GPU (RTX 3000+) is required. Connect <code>txmminer-cuda</code> directly to your own node RPC for zero-fee solo mining.</p>
 
-      <pre>txmminer &lt;rpc&gt; &lt;address&gt; [threads]
+      <pre>txmminer-cuda &lt;rpc&gt; &lt;address&gt;
 
-# Examples:
-txmminer 127.0.0.1:33332 txm1youraddress          # auto-detect cores
-txmminer 127.0.0.1:33332 txm1youraddress 8         # use 8 threads</pre>
+# Example:
+txmminer-cuda 127.0.0.1:33332 txm1youraddress</pre>
 
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Hardware</th><th>Est. Hashrate</th><th>~Block Time (diff 26)</th></tr></thead>
-          <tbody>
-            <tr><td>Single CPU core</td><td>3–8 MH/s</td><td>10–25 seconds</td></tr>
-            <tr><td>4-core CPU</td><td>15–30 MH/s</td><td>3–5 seconds</td></tr>
-            <tr><td>16-core CPU</td><td>50–120 MH/s</td><td>&lt; 2 seconds</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="callout callout-info">
-        <span class="callout-icon">ℹ</span>
-        <div class="callout-body"><strong>Mainnet is LIVE.</strong> Mainnet mining is GPU-first at 40 bits initial difficulty. <code>txmminer</code> (CPU) is for development/diagnostic use only and cannot mine at mainnet difficulty. Use <code>txmminer-cuda</code> for real mining.</div>
-      </div>
-
-      <h3>5.3 GPU-First Mining</h3>
-      <p>Tensorium's mining direction is GPU-first. A CUDA-accelerated miner (<code>txmminer-cuda</code>) is available for the public testnet and mainnet-candidate validation.</p>
+      <h3>5.3 GPU Hashrate Reference</h3>
+      <p><code>txmminer-cuda</code> supports NVIDIA GPUs (RTX 3000/4000/5000 series). Build with <code>make ARCH=sm_86</code> (RTX 3080/4080) or <code>sm_90</code> (H100).</p>
 
       <div class="table-wrap">
         <table>

@@ -71,7 +71,7 @@
     <div class="doc-header">
       <div class="doc-tag">⬡ Technical Whitepaper</div>
       <h1 class="doc-title">Tensorium: A Proof-of-Work Blockchain for Open, GPU-First Mining</h1>
-      <p class="doc-subtitle">A transparent, community-minable Layer 1 blockchain with SHA256d consensus, a UTXO ledger, and a staged path from public testnet to GPU-first mainnet-candidate launch.</p>
+      <p class="doc-subtitle">A transparent, community-minable Layer 1 blockchain with SHA256d consensus, a UTXO ledger, and a live GPU-first mainnet.</p>
       <div class="doc-meta">
         <span>📅 Version 2.0 — June 2026</span>
         <span>🔗 Mainnet: <code>tensorium-mainnet-candidate-0</code></span>
@@ -95,7 +95,7 @@
 
       <h3>1.2 Design Principles</h3>
       <ul>
-        <li><strong>Fair launch over hype.</strong> Public testnet ran before mainnet. No private allocation beyond the declared pre-mint (founder + liquidity + ecosystem reserves, 8,000,000 TXM total).</li>
+        <li><strong>Fair launch over hype.</strong> Mainnet launched without hidden allocations beyond the declared pre-mint (founder + liquidity + ecosystem reserves, 8,000,000 TXM total).</li>
         <li><strong>GPU-first mining.</strong> Mainnet launched with 40-bit initial difficulty — GPU required. CPU mining is diagnostic only.</li>
         <li><strong>Open source, always.</strong> All node, miner, and wallet code is published under an open license (Apache-2.0).</li>
         <li><strong>Self-custody.</strong> Users control their own keys. No custodial wallets.</li>
@@ -109,7 +109,7 @@
       <p>Tensorium is no longer just a node binary and a miner. The current public stack already includes the operational surfaces needed for testing, onboarding, and later ecosystem growth:</p>
       <ul>
         <li><strong>Explorer.</strong> <a href="https://explorer.tensoriumlabs.com" target="_blank">explorer.tensoriumlabs.com</a> for blocks, transactions, addresses, mempool, and basic chain charts.</li>
-        <li><strong>Faucet.</strong> <a href="https://faucet.tensoriumlabs.com" target="_blank">faucet.tensoriumlabs.com</a> for low-friction testnet onboarding after the 2026-06-01 reset.</li>
+        <li><strong>Public RPC.</strong> <a href="https://rpc.tensoriumlabs.com" target="_blank">rpc.tensoriumlabs.com</a> for wallet and integrator access to the live chain.</li>
         <li><strong>Pool website.</strong> <a href="https://pooltxm.tensoriumlabs.com" target="_blank">pooltxm.tensoriumlabs.com</a> for the reference pool, 5% fee disclosure, and miner-facing stats. Pool mining: <code>tensorium-miner --mode pool --pool stratum+tcp://pooltxm.tensoriumlabs.com:23336 --wallet &lt;address&gt; --worker &lt;name&gt;</code></li>
         <li><strong>Bridge and DEX.</strong> <a href="https://bridge.tensoriumlabs.com" target="_blank">bridge.tensoriumlabs.com</a> — live bridge to Optimism (wTXM at <code>0x2e71FD45530FAe75B6b427F3e71A0CDEB146C20e</code>). Uniswap V4 wTXM/ETH pool live on OP Mainnet. <a href="https://otc.tensoriumlabs.com" target="_blank">otc.tensoriumlabs.com</a> for OTC trades.</li>
         <li><strong>Browser wallet.</strong> A Chrome-compatible wallet extension is implemented in <a href="https://github.com/tensorium-labs/tensorium-wallet-extension" target="_blank">tensorium-wallet-extension</a>; Chrome Web Store submission is still pending.</li>
@@ -192,7 +192,7 @@ new_difficulty = old_difficulty + 1   if ratio &lt; 1.0  (blocks too fast)
                = old_difficulty - 1   if ratio &gt; 1.0  (blocks too slow)
                = old_difficulty        if ratio == 1.0</pre>
 
-      <p>The ±1 bit per window cap prevents sudden difficulty spikes that could stall the chain or enable rapid mining attacks. Difficulty is bounded between <code>min_leading_zero_bits</code> (20 for testnet) and <code>max_leading_zero_bits</code> (40 for testnet).</p>
+      <p>The ±1 bit per window cap prevents sudden difficulty spikes that could stall the chain or enable rapid mining attacks. Difficulty is bounded between <code>min_leading_zero_bits</code> (32 on mainnet) and <code>max_leading_zero_bits</code> (56 on mainnet).</p>
 
       <div class="table-wrap">
         <table>
@@ -310,7 +310,7 @@ Mined:        RTX 5090, 4.64 GH/s, 474 seconds (2026-06-02)</pre>
       </div>
 
       <h3>4.5 Transaction Fees</h3>
-      <p>After era 10 (~year 2045), block rewards cease. The network is sustained entirely by transaction fees included in blocks by miners. Fee market mechanics will be refined during testnet based on observed usage patterns.</p>
+      <p>After era 10 (~year 2045), block rewards cease. The network is sustained entirely by transaction fees included in blocks by miners. Fee market mechanics will be refined based on observed live-network usage patterns.</p>
     </div>
 
     <!-- 5. Mining -->
@@ -349,7 +349,7 @@ tensorium-miner --mode solo --rpc http://127.0.0.1:33332 --wallet txm1youraddres
         </table>
       </div>
 
-      <p>At difficulty 36–38 bits with a small GPU testnet (3–5 cards), average block time converges toward the 60-second target through difficulty auto-adjustment. Datacenter GPUs (H100, H200) have <strong>no meaningful advantage</strong> over high-end gaming GPUs for SHA256d — the algorithm is compute-bound and does not benefit from HBM bandwidth.</p>
+      <p>At difficulty 36–38 bits, average block time converges toward the 60-second target through difficulty auto-adjustment. Datacenter GPUs (H100, H200) have <strong>no meaningful advantage</strong> over high-end gaming GPUs for SHA256d — the algorithm is compute-bound and does not benefit from HBM bandwidth.</p>
 
       <h3>5.4 Mining Pool Support</h3>
       <p>The official/reference pool is live at <a href="https://pooltxm.tensoriumlabs.com" target="_blank">pooltxm.tensoriumlabs.com</a>. It exposes a miner RPC endpoint at <code>pooltxm.tensoriumlabs.com:23336</code>, records payout accounting, discloses the 5% fee, and shows gross reward, fee, and net miner payout.</p>
@@ -422,7 +422,7 @@ tensorium-miner --mode solo --rpc http://127.0.0.1:33332 --wallet txm1youraddres
       <h2 class="section-title"><span class="section-num">7</span> Security Considerations</h2>
 
       <h3>7.1 51% Attack Resistance</h3>
-      <p>As with all PoW chains, Tensorium is vulnerable to 51% hash power attacks. During testnet, this risk is accepted — testnet has no economic value. For mainnet, the GPU-first design means an attacker would need to acquire a large GPU farm, which is economically costly and visible. The ±1 bit difficulty cap prevents rapid hashrate manipulation.</p>
+      <p>As with all PoW chains, Tensorium is vulnerable to 51% hash power attacks. The GPU-first design means an attacker would need to acquire a large GPU farm, which is economically costly and visible. The ±1 bit difficulty cap prevents rapid hashrate manipulation.</p>
 
       <h3>7.2 Replay Protection</h3>
       <p>The <code>chain_id</code> field is included in every block header and validated on every P2P handshake. Transactions signed for one network are invalid on another.</p>
@@ -477,14 +477,14 @@ tensorium-miner --mode solo --rpc http://127.0.0.1:33332 --wallet txm1youraddres
         <div class="phase">
           <div class="phase-dot done">3</div>
           <div>
-            <div class="phase-title">Phase 3 — P2P Testnet <span class="phase-tag done">Done</span></div>
+            <div class="phase-title">Phase 3 — P2P Network Bootstrap <span class="phase-tag done">Done</span></div>
             <div class="phase-desc">Handshake, block/tx broadcast, chain sync, fork choice, peer ban system. Tested on VPS.</div>
           </div>
         </div>
         <div class="phase">
           <div class="phase-dot active">4</div>
           <div>
-            <div class="phase-title">Phase 4 — Public Testnet <span class="phase-tag done">Done</span></div>
+            <div class="phase-title">Phase 4 — Public Network Rollout <span class="phase-tag done">Done</span></div>
             <div class="phase-desc">Public seed node, binary releases, installer script, block explorer (explorer.tensoriumlabs.com), mining documentation, multi-threaded CPU miner. Community bug reports open.</div>
           </div>
         </div>
@@ -492,13 +492,13 @@ tensorium-miner --mode solo --rpc http://127.0.0.1:33332 --wallet txm1youraddres
           <div class="phase-dot pending">5</div>
           <div>
             <div class="phase-title">Phase 5 — Stabilization <span class="phase-tag done">Done</span></div>
-            <div class="phase-desc">Chain reorg testing, spam resistance, wallet recovery, node restart resilience, peer discovery, testnet running ≥ 4 weeks stable. Consensus rules frozen.</div>
+            <div class="phase-desc">Chain reorg testing, spam resistance, wallet recovery, node restart resilience, peer discovery, and multi-week stability before consensus freeze.</div>
           </div>
         </div>
         <div class="phase">
           <div class="phase-dot pending">6</div>
           <div>
-            <div class="phase-title">Phase 6 — GPU-First Testnet <span class="phase-tag done">Done</span></div>
+            <div class="phase-title">Phase 6 — GPU Miner Rollout <span class="phase-tag done">Done</span></div>
             <div class="phase-desc">CUDA miner (<code>tensorium-miner</code>), difficulty raised to 36 bits, GPU benchmark publication, pool mining path, multi-GPU process guidance.</div>
           </div>
         </div>

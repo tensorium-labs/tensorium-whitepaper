@@ -334,7 +334,7 @@ Mined:        RTX 5090, 4.64 GH/s, 474 seconds (2026-06-02)</pre>
 tensorium-miner --mode solo --rpc http://127.0.0.1:33332 --wallet txm1youraddress --gpu all --intensity auto</pre>
 
       <h3>5.3 GPU Hashrate Reference</h3>
-      <p><code>tensorium-miner</code> supports NVIDIA GPUs (RTX 3000/4000/5000 series). Older setups may still expose the <code>txmminer-cuda</code> alias for backward compatibility. Build with <code>make ARCH=sm_86</code> (RTX 3080/4080) or <code>sm_90</code> (H100).</p>
+      <p><code>tensorium-miner</code> supports NVIDIA GPUs (RTX 3000/4000/5000 series). Build with <code>make ARCH=sm_86</code> (RTX 3080/4080) or <code>sm_90</code> (H100).</p>
 
       <div class="table-wrap">
         <table>
@@ -499,7 +499,7 @@ tensorium-miner --mode solo --rpc http://127.0.0.1:33332 --wallet txm1youraddres
           <div class="phase-dot pending">6</div>
           <div>
             <div class="phase-title">Phase 6 — GPU-First Testnet <span class="phase-tag done">Done</span></div>
-            <div class="phase-desc">CUDA miner (txmminer-cuda), difficulty raised to 36 bits, GPU benchmark publication, pool mining path, multi-GPU process guidance.</div>
+            <div class="phase-desc">CUDA miner (<code>tensorium-miner</code>), difficulty raised to 36 bits, GPU benchmark publication, pool mining path, multi-GPU process guidance.</div>
           </div>
         </div>
         <div class="phase">

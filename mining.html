@@ -148,7 +148,7 @@
       </ol>
 
       <h3>2.2 Manual Installation</h3>
-      <p>Download the latest testnet binaries from <a href="https://github.com/tensorium-labs/tensorium-core/releases" target="_blank">GitHub Releases</a>:</p>
+      <p>Download the latest mainnet binaries from <a href="https://github.com/tensorium-labs/tensorium-core/releases" target="_blank">GitHub Releases</a>:</p>
 
       <pre># Download
 RELEASE="v0.3.3-mainnet"
@@ -266,7 +266,7 @@ sync complete: tip=150 synced=150 blocks from seed.tensoriumlabs.com:33333</pre>
 TENSORIUM_MC_STATE=~/tensorium-node/state.json \
 TENSORIUM_MC_MEMPOOL=~/tensorium-node/mempool.json \
 TENSORIUM_MC_BANS=~/tensorium-node/banlist.json \
-TENSORIUM_MC_PEERS=seed.tensoriumlabs.com:33333 \
+TENSORIUM_MC_PEERS=seed.tensoriumlabs.com:33333,seed2.tensoriumlabs.com:33333 \
 tensorium-node mainnet-candidate rpc 127.0.0.1:33332
 
 # Terminal 2 — P2P listener (port 33333 must be open in firewall)
@@ -291,7 +291,7 @@ User=$(whoami)
 Environment=TENSORIUM_MC_STATE=$HOME/tensorium-node/state.json
 Environment=TENSORIUM_MC_MEMPOOL=$HOME/tensorium-node/mempool.json
 Environment=TENSORIUM_MC_BANS=$HOME/tensorium-node/banlist.json
-Environment=TENSORIUM_MC_PEERS=seed.tensoriumlabs.com:33333
+Environment=TENSORIUM_MC_PEERS=seed.tensoriumlabs.com:33333,seed2.tensoriumlabs.com:33333
 ExecStart=/usr/local/bin/tensorium-node mainnet-candidate rpc 127.0.0.1:33332
 Restart=always
 RestartSec=10
@@ -550,7 +550,7 @@ txmminer-cuda pooltxm.tensoriumlabs.com:23336 YOUR_ADDRESS  # pool — 5% fee</p
           What is the seed node and do I need to keep it connected? <span>+</span>
         </div>
         <div class="faq-a">
-          The seed node at <code>seed.tensoriumlabs.com:33333</code> is the bootstrap node run by Tensorium Labs. You need it to sync your initial chain state and broadcast mined blocks. Set <code>TENSORIUM_MC_PEERS=seed.tensoriumlabs.com:33333</code> in your RPC service for automatic block propagation.
+          The bootstrap seeds are <code>seed.tensoriumlabs.com:33333</code> and <code>seed2.tensoriumlabs.com:33333</code>. Use both in <code>TENSORIUM_MC_PEERS</code> for initial sync and better propagation redundancy.
         </div>
       </div>
 

@@ -16,7 +16,7 @@ This repository is the public protocol-facing explanation of Tensorium: consensu
 - RPC port: `33332/tcp`
 - Primary seed: `seed.tensoriumlabs.com:33333`
 - Secondary seed: `seed2.tensoriumlabs.com:33333`
-- Backup seed: `139.180.137.144:33333`
+- Backup seed naming: expose the hostname, not the raw VPS IP
 - Era 1 reward: `1,190,279,581` atoms = `11.90279581 TXM`
 - Max supply: `33,000,000 TXM` = `8,000,000` pre-mint + `25,000,000` mining
 - Pool fee: `5%`

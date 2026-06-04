@@ -214,7 +214,7 @@ new_difficulty = old_difficulty + 1   if ratio &lt; 1.0  (blocks too fast)
       <p>When a higher-work chain is received, the node performs a <strong>chain reorganization</strong>: it identifies the common ancestor, reverts blocks from the old tip back to the fork point, and applies the new chain's blocks. Reorg depth is logged to allow monitoring.</p>
 
       <h3>3.4 Genesis Block</h3>
-      <p>The mainnet genesis block is hardcoded in <code>v0.3.1-mainnet-candidate</code>. Running <code>tensorium-node mainnet-candidate init</code> produces the identical genesis block hash on every node:</p>
+      <p>The mainnet genesis block is hardcoded in <code>v0.3.3-mainnet</code>. Running <code>tensorium-node mainnet-candidate init</code> produces the identical genesis block hash on every node:</p>
       <pre>Genesis hash: 0000000000269b71601aded6dda2991df6f88b67ac2bef13dff56f4f8a94dfae
 Timestamp:    2026-06-01 00:00:00 UTC  (1,780,272,000)
 Nonce:        1,936,263,118,035
@@ -388,7 +388,7 @@ txmminer-cuda 127.0.0.1:33332 txm1youraddress</pre>
       </div>
 
       <h3>6.2 Peer Discovery</h3>
-      <p>The current implementation uses static peer configuration via the <code>TENSORIUM_PEERS</code> environment variable plus built-in default seeds in the node binary. For mainnet-candidate infrastructure, DNS seed support is already live at <code>seed.tensoriumlabs.com:33333</code>, with a second backup seed path prepared separately for redundancy.</p>
+      <p>The current implementation uses static peer configuration via the <code>TENSORIUM_PEERS</code> environment variable plus built-in default seeds in the node binary. For mainnet infrastructure, DNS seed support is live at <code>seed.tensoriumlabs.com:33333</code> and <code>seed2.tensoriumlabs.com:33333</code> for redundancy without exposing raw infrastructure IPs.</p>
 
       <h3>6.3 Peer Ban Policy</h3>
       <p>Nodes maintain a score-based ban list to protect against malicious peers:</p>

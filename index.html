@@ -110,7 +110,7 @@
       <ul>
         <li><strong>Explorer.</strong> <a href="https://explorer.tensoriumlabs.com" target="_blank">explorer.tensoriumlabs.com</a> for blocks, transactions, addresses, mempool, and basic chain charts.</li>
         <li><strong>Faucet.</strong> <a href="https://faucet.tensoriumlabs.com" target="_blank">faucet.tensoriumlabs.com</a> for low-friction testnet onboarding after the 2026-06-01 reset.</li>
-        <li><strong>Pool website.</strong> <a href="https://pooltxm.tensoriumlabs.com" target="_blank">pooltxm.tensoriumlabs.com</a> for the reference pool, 5% fee disclosure, and miner-facing stats. Pool mining: <code>txmminer-cuda pooltxm.tensoriumlabs.com:23336 &lt;address&gt;</code></li>
+        <li><strong>Pool website.</strong> <a href="https://pooltxm.tensoriumlabs.com" target="_blank">pooltxm.tensoriumlabs.com</a> for the reference pool, 5% fee disclosure, and miner-facing stats. Pool mining: <code>tensorium-miner --mode pool --pool stratum+tcp://pooltxm.tensoriumlabs.com:23336 --wallet &lt;address&gt; --worker &lt;name&gt;</code></li>
         <li><strong>Bridge and DEX.</strong> <a href="https://bridge.tensoriumlabs.com" target="_blank">bridge.tensoriumlabs.com</a> — live bridge to Optimism (wTXM at <code>0x2e71FD45530FAe75B6b427F3e71A0CDEB146C20e</code>). Uniswap V4 wTXM/ETH pool live on OP Mainnet. <a href="https://otc.tensoriumlabs.com" target="_blank">otc.tensoriumlabs.com</a> for OTC trades.</li>
         <li><strong>Browser wallet.</strong> A Chrome-compatible wallet extension is implemented in <a href="https://github.com/tensorium-labs/tensorium-wallet-extension" target="_blank">tensorium-wallet-extension</a>; Chrome Web Store submission is still pending.</li>
       </ul>
@@ -129,7 +129,7 @@
           <tbody>
             <tr><td><code>tensorium-node</code></td><td>Full node — validates blocks, maintains chain state, exposes RPC, participates in P2P</td><td>Rust</td></tr>
             <tr><td><code>txmwallet</code></td><td>CLI wallet — generates keys, signs transactions, checks balance</td><td>Rust</td></tr>
-            <tr><td><code>txmminer-cuda</code></td><td>GPU miner — CUDA-accelerated SHA256d mining, required for mainnet</td><td>Rust + CUDA</td></tr>
+            <tr><td><code>tensorium-miner</code></td><td>GPU miner — CUDA-accelerated SHA256d mining for solo and pool/stratum modes, required for mainnet</td><td>Rust + CUDA</td></tr>
           </tbody>
         </table>
       </div>
@@ -326,15 +326,15 @@ Mined:        RTX 5090, 4.64 GH/s, 474 seconds (2026-06-02)</pre>
       </ol>
 
       <h3>5.2 Solo Mining (GPU)</h3>
-      <p>Mainnet difficulty starts at 40 bits — a GPU (RTX 3000+) is required. Connect <code>txmminer-cuda</code> directly to your own node RPC for zero-fee solo mining.</p>
+      <p>Mainnet difficulty starts at 40 bits — a GPU (RTX 3000+) is required. Connect <code>tensorium-miner</code> directly to your own node RPC for zero-fee solo mining.</p>
 
-      <pre>txmminer-cuda &lt;rpc&gt; &lt;address&gt;
+      <pre>tensorium-miner --mode solo --rpc http://127.0.0.1:33332 --wallet &lt;address&gt; --gpu all --intensity auto
 
 # Example:
-txmminer-cuda 127.0.0.1:33332 txm1youraddress</pre>
+tensorium-miner --mode solo --rpc http://127.0.0.1:33332 --wallet txm1youraddress --gpu all --intensity auto</pre>
 
       <h3>5.3 GPU Hashrate Reference</h3>
-      <p><code>txmminer-cuda</code> supports NVIDIA GPUs (RTX 3000/4000/5000 series). Build with <code>make ARCH=sm_86</code> (RTX 3080/4080) or <code>sm_90</code> (H100).</p>
+      <p><code>tensorium-miner</code> supports NVIDIA GPUs (RTX 3000/4000/5000 series). Older setups may still expose the <code>txmminer-cuda</code> alias for backward compatibility. Build with <code>make ARCH=sm_86</code> (RTX 3080/4080) or <code>sm_90</code> (H100).</p>
 
       <div class="table-wrap">
         <table>

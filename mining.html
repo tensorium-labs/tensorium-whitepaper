@@ -75,7 +75,7 @@
 
       <div class="callout callout-info">
         <span class="callout-icon">ℹ</span>
-        <div class="callout-body"><strong>Mainnet LIVE as of 2026-06-02.</strong> Mining rewards are real TXM. GPU required (<code>txmminer-cuda</code>). Solo: point at your own node RPC (port 33332, 0% fee). Pool: connect to <code>pooltxm.tensoriumlabs.com:23336</code> (5% fee).</div>
+        <div class="callout-body"><strong>Mainnet LIVE as of 2026-06-02.</strong> Mining rewards are real TXM. GPU required (<code>tensorium-miner</code>). Solo: point at your own node RPC (port 33332, 0% fee). Pool: connect to <code>pooltxm.tensoriumlabs.com:23336</code> (5% fee).</div>
       </div>
 
     <!-- Quick overview -->
@@ -101,7 +101,7 @@
         <div class="step-card">
           <div class="step-num">04</div>
           <div class="step-title">Mine</div>
-          <div class="step-desc">Run <code>txmminer-cuda</code> and start earning block rewards.</div>
+          <div class="step-desc">Run <code>tensorium-miner</code> and start earning block rewards.</div>
         </div>
       </div>
     </div>
@@ -126,7 +126,7 @@
 
       <div class="callout callout-info">
         <span class="callout-icon">ℹ</span>
-        <div class="callout-body"><strong>GPU required for mainnet.</strong> Mainnet runs at 40-bit difficulty — a GPU (RTX 3000+ recommended) is required. GPU (RTX 3000+) required. Use <code>txmminer-cuda</code>.</div>
+        <div class="callout-body"><strong>GPU required for mainnet.</strong> Mainnet runs at 40-bit difficulty — a GPU (RTX 3000+ recommended) is required. GPU (RTX 3000+) required. Use <code>tensorium-miner</code>.</div>
       </div>
     </div>
 
@@ -141,7 +141,7 @@
 
       <p>The installer will:</p>
       <ol>
-        <li>Download <code>tensorium-node</code>, <code>txmminer-cuda</code>, <code>txmwallet</code> to <code>/usr/local/bin/</code></li>
+        <li>Download <code>tensorium-node</code>, <code>tensorium-miner</code>, <code>txmwallet</code> to <code>/usr/local/bin/</code></li>
         <li>Prompt you for a wallet passphrase and create a wallet at <code>~/tensorium-node/wallet.json</code></li>
         <li>Initialize the chain (genesis block) and sync from the seed node</li>
         <li>Optionally install systemd services for auto-start on reboot</li>
@@ -157,12 +157,12 @@ BASE="https://github.com/tensorium-labs/tensorium-core/releases/download/${RELEA
 curl -fsSL -o tensorium-node  "${BASE}/tensorium-node-linux-x86_64"
 curl -fsSL -o txmwallet        "${BASE}/txmwallet-linux-x86_64"
 
-# Download txmminer-cuda for your GPU (sm_86 = RTX 3000/4000 series)
-curl -fsSL -o txmminer-cuda "${BASE}/txmminer-cuda-linux-x86_64-sm86"
+# Download tensorium-miner for your GPU (sm_86 = RTX 3000/4000 series)
+curl -fsSL -o tensorium-miner "${BASE}/tensorium-miner-linux-x86_64-sm86"
 
 # Make executable and install
-chmod +x tensorium-node txmwallet txmminer-cuda
-sudo mv tensorium-node txmwallet txmminer-cuda /usr/local/bin/
+chmod +x tensorium-node txmwallet tensorium-miner
+sudo mv tensorium-node txmwallet tensorium-miner /usr/local/bin/
 
 # Verify
 tensorium-node --help</pre>
@@ -174,7 +174,7 @@ cd tensorium-core
 cargo build --release
 
 # Binaries will be in target/release/
-sudo cp target/release/tensorium-node target/release/txmminer-cuda target/release/txmwallet /usr/local/bin/</pre>
+sudo cp target/release/tensorium-node target/release/tensorium-miner target/release/txmwallet /usr/local/bin/</pre>
     </div>
 
     <!-- 3. Wallet -->
@@ -204,7 +204,7 @@ export TENSORIUM_WALLET_PASSPHRASE="your-passphrase"
 txmwallet getnewaddress
 # → txm1abc123xyz...   (your TXM address)</pre>
 
-      <p>Save this address — you will provide it to <code>txmminer-cuda</code> so block rewards go to your wallet.</p>
+      <p>Save this address — you will provide it to <code>tensorium-miner</code> so block rewards go to your wallet.</p>
 
       <h3>3.3 Backup Your Wallet</h3>
 
@@ -331,13 +331,13 @@ sudo systemctl enable --now tensorium-rpc tensorium-p2p</pre>
       <pre>YOUR_ADDRESS="txm1your_address_here"
 
 # GPU solo mining — connects to your own node RPC (port 33332), 0% pool fee
-txmminer-cuda 127.0.0.1:33332 "$YOUR_ADDRESS"</pre>
+tensorium-miner --mode solo --rpc http://127.0.0.1:33332 --wallet "$YOUR_ADDRESS" --gpu all --intensity auto</pre>
 
       <h3>5.2 Pool Mining (5% fee)</h3>
       <pre>YOUR_ADDRESS="txm1your_address_here"
 
 # GPU pool mining — connects to official pool, 5% fee
-txmminer-cuda pooltxm.tensoriumlabs.com:23336 "$YOUR_ADDRESS"</pre>
+tensorium-miner --mode pool --pool stratum+tcp://pooltxm.tensoriumlabs.com:23336 --wallet "$YOUR_ADDRESS" --worker "$(hostname)" --gpu all --intensity auto</pre>
 
       <div class="callout callout-info">
         <span class="callout-icon">💡</span>
@@ -360,11 +360,11 @@ txmminer-cuda pooltxm.tensoriumlabs.com:23336 "$YOUR_ADDRESS"</pre>
 
       <h3>5.4 Keep Miner Running</h3>
       <pre># Using nohup
-nohup txmminer-cuda 127.0.0.1:33332 "$YOUR_ADDRESS" > ~/tensorium-node/miner.log 2>&1 &
+nohup tensorium-miner --mode solo --rpc http://127.0.0.1:33332 --wallet "$YOUR_ADDRESS" --gpu all --intensity auto > ~/tensorium-node/miner.log 2>&1 &
 echo "Miner PID: $!"
 
 # Using tmux
-tmux new -s miner "txmminer-cuda 127.0.0.1:33332 $YOUR_ADDRESS"
+tmux new -s miner "tensorium-miner --mode solo --rpc http://127.0.0.1:33332 --wallet $YOUR_ADDRESS --gpu all --intensity auto"
 
 # Systemd service
 sudo tee /etc/systemd/system/tensorium-miner.service &lt;&lt;EOF
@@ -375,7 +375,7 @@ After=tensorium-rpc.service
 [Service]
 Type=simple
 User=$(whoami)
-ExecStart=/usr/local/bin/txmminer-cuda 127.0.0.1:33332 YOUR_TXM_ADDRESS
+ExecStart=/usr/local/bin/tensorium-miner --mode solo --rpc http://127.0.0.1:33332 --wallet YOUR_TXM_ADDRESS --gpu all --intensity auto
 Restart=always
 RestartSec=5
 
@@ -501,8 +501,8 @@ tensorium-node banlist                   # Show peer ban list
 tensorium-node unban &lt;ip&gt;               # Remove a ban
 
 # Mainnet mining (GPU)
-txmminer-cuda 127.0.0.1:33332 YOUR_ADDRESS           # solo — 0% fee
-txmminer-cuda pooltxm.tensoriumlabs.com:23336 YOUR_ADDRESS  # pool — 5% fee</pre>
+tensorium-miner --mode solo --rpc http://127.0.0.1:33332 --wallet YOUR_ADDRESS --gpu all --intensity auto  # solo — 0% fee
+tensorium-miner --mode pool --pool stratum+tcp://pooltxm.tensoriumlabs.com:23336 --wallet YOUR_ADDRESS --worker WORKER --gpu all --intensity auto  # pool — 5% fee</pre>
     </div>
 
     <!-- FAQ -->
@@ -523,7 +523,7 @@ txmminer-cuda pooltxm.tensoriumlabs.com:23336 YOUR_ADDRESS  # pool — 5% fee</p
           Do I need a GPU to mine? <span>+</span>
         </div>
         <div class="faq-a">
-          Yes. Mainnet runs at 40-bit initial difficulty — a GPU (RTX 3000+ recommended) is required. Download <code>txmminer-cuda</code> from the <a href="https://github.com/tensorium-labs/tensorium-core/releases" target="_blank">latest release</a>.
+          Yes. Mainnet runs at 40-bit initial difficulty — a GPU (RTX 3000+ recommended) is required. Download <code>tensorium-miner</code> from the <a href="https://github.com/tensorium-labs/tensorium-core/releases" target="_blank">latest release</a>.
         </div>
       </div>
 

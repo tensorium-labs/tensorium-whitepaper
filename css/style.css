@@ -1,19 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
 
 :root {
-  --bg:         #07090f;
-  --surface:    #0d1117;
-  --surface2:   #161b22;
-  --border:     #21262d;
-  --border2:    #30363d;
-  --primary:    #7c3aed;
-  --primary-l:  #a78bfa;
-  --blue:       #58a6ff;
-  --green:      #3fb950;
-  --yellow:     #e3b341;
-  --text:       #e6edf3;
-  --text2:      #8b949e;
-  --text3:      #484f58;
+  --bg:         #F5F0E8;
+  --surface:    #FFFFFF;
+  --surface2:   #FAF7F2;
+  --border:     #E1DBD0;
+  --border2:    #D0C9BC;
+  --primary:    #E05C0B;
+  --primary-l:  #F07230;
+  --blue:       #1D4ED8;
+  --green:      #16a34a;
+  --yellow:     #b45309;
+  --text:       #1C1916;
+  --text2:      #6B6560;
+  --text3:      #9C9890;
   --sidebar-w:  260px;
   --content-w:  780px;
   --radius:     10px;
@@ -73,7 +73,7 @@ a:hover { text-decoration: underline; }
   display: block;
   flex-shrink: 0;
   object-fit: contain;
-  filter: drop-shadow(0 0 18px rgba(88, 166, 255, 0.2));
+  filter: drop-shadow(0 0 18px rgba(224, 92, 11, 0.18));
 }
 
 .logo-text { font-weight: 700; font-size: 15px; color: var(--text); }
@@ -103,7 +103,7 @@ a:hover { text-decoration: underline; }
 }
 
 .nav-link:hover { color: var(--text); background: var(--surface2); text-decoration: none; }
-.nav-link.active { color: var(--primary-l); border-left-color: var(--primary); background: rgba(124,58,237,.08); }
+.nav-link.active { color: var(--primary-l); border-left-color: var(--primary); background: rgba(224,92,11,.08); }
 .nav-link .nav-num { font-size: 11px; color: var(--text3); min-width: 18px; }
 
 .sidebar-footer {
@@ -155,9 +155,9 @@ a:hover { text-decoration: underline; }
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(124,58,237,.12);
+  background: rgba(224,92,11,.12);
   color: var(--primary-l);
-  border: 1px solid rgba(124,58,237,.25);
+  border: 1px solid rgba(224,92,11,.25);
   padding: 4px 12px;
   border-radius: 20px;
   font-size: 12px;
@@ -285,7 +285,7 @@ td {
 td strong { color: var(--text); }
 td:first-child { color: var(--text); font-weight: 500; }
 
-tr:nth-child(even) td { background: rgba(255,255,255,.02); }
+tr:nth-child(even) td { background: rgba(28,25,22,.025); }
 
 /* Code blocks */
 pre {
@@ -331,9 +331,9 @@ li strong { color: var(--text); }
 .callout-body { color: var(--text2); }
 .callout-body strong { color: var(--text); }
 
-.callout-info    { background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.2); }
-.callout-warn    { background: rgba(227,179,65,.08); border: 1px solid rgba(227,179,65,.2); }
-.callout-success { background: rgba(63,185,80,.08);  border: 1px solid rgba(63,185,80,.2); }
+.callout-info    { background: rgba(29,78,216,.08);  border: 1px solid rgba(29,78,216,.2); }
+.callout-warn    { background: rgba(180,83,9,.08);   border: 1px solid rgba(180,83,9,.2); }
+.callout-success { background: rgba(22,163,74,.08);  border: 1px solid rgba(22,163,74,.2); }
 
 /* Emission chart */
 .emission-bars { margin: 20px 0; }
@@ -396,21 +396,21 @@ li strong { color: var(--text); }
   margin-top: 2px;
 }
 
-.phase-dot.done    { background: rgba(63,185,80,.15);  color: var(--green); border: 2px solid var(--green); }
-.phase-dot.active  { background: rgba(124,58,237,.2); color: var(--primary-l); border: 2px solid var(--primary); }
+.phase-dot.done    { background: rgba(22,163,74,.15);  color: var(--green); border: 2px solid var(--green); }
+.phase-dot.active  { background: rgba(224,92,11,.2); color: var(--primary-l); border: 2px solid var(--primary); }
 .phase-dot.pending { background: var(--surface2); color: var(--text3); border: 2px solid var(--border); }
 
 .phase-title { font-weight: 600; color: var(--text); margin-bottom: 4px; }
 .phase-desc  { font-size: 13px; color: var(--text2); }
 .phase-tag   { display: inline-block; font-size: 10px; font-weight: 700; padding: 1px 8px; border-radius: 10px; margin-left: 8px; vertical-align: middle; }
-.phase-tag.done    { background: rgba(63,185,80,.15);  color: var(--green); }
-.phase-tag.active  { background: rgba(124,58,237,.15); color: var(--primary-l); }
+.phase-tag.done    { background: rgba(22,163,74,.15);  color: var(--green); }
+.phase-tag.active  { background: rgba(224,92,11,.15); color: var(--primary-l); }
 .phase-tag.pending { background: var(--surface2); color: var(--text3); }
 
 /* Mining page hero */
 .mining-hero {
-  background: linear-gradient(135deg, rgba(124,58,237,.12), rgba(63,185,80,.08));
-  border: 1px solid rgba(124,58,237,.2);
+  background: linear-gradient(135deg, rgba(224,92,11,.12), rgba(22,163,74,.08));
+  border: 1px solid rgba(224,92,11,.2);
   border-radius: var(--radius);
   padding: 32px;
   margin-bottom: 40px;

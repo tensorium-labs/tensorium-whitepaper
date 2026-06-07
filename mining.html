@@ -75,7 +75,7 @@
 
       <div class="callout callout-info">
         <span class="callout-icon">ℹ</span>
-        <div class="callout-body"><strong>Mainnet LIVE as of 2026-06-02.</strong> Mining rewards are real TXM. GPU required (<code>tensorium-miner</code>). Solo: point at your own node RPC (port 33332, 0% fee). Pool: connect to <code>pooltxm.tensoriumlabs.com:23336</code> (5% fee).</div>
+        <div class="callout-body"><strong>Mainnet LIVE as of 2026-06-02.</strong> Mining rewards are real TXM. GPU required (<code>tensorium-miner</code>). Solo: point at your own node RPC (port 33332, 0% fee). Pool: connect to <code>pooltxm.tensoriumlabs.com:3333</code> (5% fee).</div>
       </div>
 
     <!-- Quick overview -->
@@ -337,11 +337,16 @@ tensorium-miner --mode solo --rpc http://127.0.0.1:33332 --wallet "$YOUR_ADDRESS
       <pre>YOUR_ADDRESS="txm1your_address_here"
 
 # GPU pool mining — connects to official pool, 5% fee
-tensorium-miner --mode pool --pool stratum+tcp://pooltxm.tensoriumlabs.com:23336 --wallet "$YOUR_ADDRESS" --worker "$(hostname)" --gpu all --intensity auto</pre>
+tensorium-miner --mode pool --pool stratum+tcp://pooltxm.tensoriumlabs.com:3333 --wallet "$YOUR_ADDRESS" --worker "$(hostname)" --gpu all --intensity auto</pre>
 
       <div class="callout callout-info">
         <span class="callout-icon">💡</span>
-        <div class="callout-body"><strong>Solo vs Pool.</strong> Solo mining (connect to your own node:33332) earns the full block reward with 0% fee. Pool mining (pooltxm.tensoriumlabs.com:23336) charges 5% but provides smoothed payouts without running your own node. </div>
+        <div class="callout-body"><strong>Solo vs Pool.</strong> Solo mining (connect to your own node:33332) earns the full block reward with 0% fee. Pool mining (pooltxm.tensoriumlabs.com:3333) charges 5% but provides smoothed payouts without running your own node.</div>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">ℹ</span>
+        <div class="callout-body"><strong>Explorer vs Pool Website.</strong> The explorer shows on-chain blocks and wallet balances. The pool website shows <strong>pool ledger</strong> entries only. Direct or solo-mined blocks settle straight to the miner wallet and will not appear in pool payout accounting.</div>
       </div>
 
       <h3>5.3 Expected Hashrate by GPU</h3>
@@ -502,7 +507,7 @@ tensorium-node unban &lt;ip&gt;               # Remove a ban
 
 # Mainnet mining (GPU)
 tensorium-miner --mode solo --rpc http://127.0.0.1:33332 --wallet YOUR_ADDRESS --gpu all --intensity auto  # solo — 0% fee
-tensorium-miner --mode pool --pool stratum+tcp://pooltxm.tensoriumlabs.com:23336 --wallet YOUR_ADDRESS --worker WORKER --gpu all --intensity auto  # pool — 5% fee</pre>
+tensorium-miner --mode pool --pool stratum+tcp://pooltxm.tensoriumlabs.com:3333 --wallet YOUR_ADDRESS --worker WORKER --gpu all --intensity auto  # pool — 5% fee</pre>
     </div>
 
     <!-- FAQ -->

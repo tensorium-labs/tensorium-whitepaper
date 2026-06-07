@@ -20,7 +20,9 @@ This repository is the public protocol-facing explanation of Tensorium: consensu
 - Era 1 reward: `1,190,279,581` atoms = `11.90279581 TXM`
 - Max supply: `33,000,000 TXM` = `8,000,000` pre-mint + `25,000,000` mining
 - Pool fee: `5%`
+- Pool miner endpoint: `pooltxm.tensoriumlabs.com:3333`
 - Solo mining fee: `0%` at protocol level
+- Pool website data scope: `pool ledger only`; direct/solo blocks remain on-chain and should be checked in the explorer
 - Transaction fee posture: no protocol-enforced minimum fee at the current stage
 
 ## Intended Audience

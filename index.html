@@ -164,7 +164,7 @@
       <p>Coinbase transactions (block rewards) have empty inputs. All other transactions must reference existing UTXOs and provide valid secp256k1 ECDSA signatures.</p>
 
       <h3>2.4 UTXO Set</h3>
-      <p>The node maintains a UTXO set that is updated with each accepted block. Coinbase UTXOs are subject to a <strong>100-block maturity</strong> requirement before they can be spent, providing protection against reorgs invalidating mining rewards.</p>
+      <p>The node maintains a UTXO set that is updated with each accepted block. Coinbase UTXOs are subject to a <strong>10-block maturity</strong> requirement before they can be spent, providing protection against short reorgs invalidating mining rewards.</p>
 
       <h3>2.5 Chain State</h3>
       <p>Chain state is persisted to a RocksDB directory (<code>tensorium-mainnet-state.db/</code> by default). The canonical chain is the one with the greatest cumulative work, where block work is defined as <code>2^leading_zero_bits</code>.</p>

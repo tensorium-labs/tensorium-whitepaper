@@ -11,14 +11,13 @@ This repository is the public protocol-facing explanation of Tensorium: consensu
 
 ## Important Network Facts
 
-- Chain ID: `tensorium-mainnet-candidate-0`
+- Chain ID: `tensorium-mainnet`
 - P2P port: `33333/tcp`
 - RPC port: `33332/tcp`
 - Primary seed: `seed.tensoriumlabs.com:33333`
-- Secondary seed: `seed2.tensoriumlabs.com:33333`
-- Backup seed naming: expose the hostname, not the raw VPS IP
-- Era 1 reward: `1,190,279,581` atoms = `11.90279581 TXM`
-- Max supply: `33,000,000 TXM` = `8,000,000` pre-mint + `25,000,000` mining
+- Era 1 reward: `785,584,523` atoms = `7.85584523 TXM`
+- Coinbase maturity: `10` blocks
+- Max supply: `33,000,000 TXM` = `0` premine + `33,000,000` mining
 - Pool fee: `5%`
 - Pool miner endpoint: `pooltxm.tensoriumlabs.com:3333`
 - Solo mining fee: `0%` at protocol level

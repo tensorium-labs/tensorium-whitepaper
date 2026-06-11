@@ -41,8 +41,8 @@
   </nav>
 
   <div class="sidebar-footer">
-    © 2025 Tensorium Labs<br>
-    Chain: <code>tensorium-mainnet-candidate-0</code>
+    © 2026 Tensorium Labs<br>
+    Chain: <code>tensorium-mainnet</code>
   </div>
 </aside>
 
@@ -64,11 +64,11 @@
     <div class="doc-header" id="overview">
       <div class="doc-tag">⛏ Mining Guide</div>
       <h1 class="doc-title">How to Mine Tensorium (TXM)</h1>
-      <p class="doc-subtitle">Step-by-step guide to setting up a node, creating a wallet, and mining TXM on the live mainnet. GPU required — mainnet initial difficulty is 40 bits.</p>
+      <p class="doc-subtitle">Step-by-step guide to setting up a node, creating a wallet, and mining TXM on the live mainnet. GPU required — mainnet initial difficulty is 42 bits.</p>
       <div class="doc-meta">
-        <span>🌐 Network: <code>tensorium-mainnet-candidate-0</code></span>
-        <span>⚙ Difficulty: 40 bits (GPU required)</span>
-        <span>🎁 Reward: 11.9027 TXM/block</span>
+        <span>🌐 Network: <code>tensorium-mainnet</code></span>
+        <span>⚙ Difficulty: 42 bits (GPU required)</span>
+        <span>🎁 Reward: 7.8558 TXM/block</span>
         <span>💻 Platform: Linux x86_64</span>
       </div>
     </div>
@@ -126,7 +126,7 @@
 
       <div class="callout callout-info">
         <span class="callout-icon">ℹ</span>
-        <div class="callout-body"><strong>GPU required for mainnet.</strong> Mainnet runs at 40-bit difficulty — a GPU (RTX 3000+ recommended) is required. GPU (RTX 3000+) required. Use <code>tensorium-miner</code>.</div>
+        <div class="callout-body"><strong>GPU required for mainnet.</strong> Mainnet runs at 42-bit difficulty — a GPU (RTX 3000+ recommended) is required. GPU (RTX 3000+) required. Use <code>tensorium-miner</code>.</div>
       </div>
     </div>
 
@@ -151,14 +151,15 @@
       <p>Download the latest mainnet binaries from <a href="https://github.com/tensorium-labs/tensorium-core/releases" target="_blank">GitHub Releases</a>:</p>
 
       <pre># Download
-RELEASE="v0.3.3-mainnet"
-BASE="https://github.com/tensorium-labs/tensorium-core/releases/download/${RELEASE}"
+# Node + wallet CLI
+curl -fsSL -o tensorium-node \
+  https://github.com/tensorium-labs/tensorium-core/releases/latest/download/tensorium-node-linux-x86_64
+curl -fsSL -o txmwallet \
+  https://github.com/tensorium-labs/tensorium-core/releases/latest/download/txmwallet-linux-x86_64
 
-curl -fsSL -o tensorium-node  "${BASE}/tensorium-node-linux-x86_64"
-curl -fsSL -o txmwallet        "${BASE}/txmwallet-linux-x86_64"
-
-# Download tensorium-miner for your GPU (sm_86 = RTX 3000/4000 series)
-curl -fsSL -o tensorium-miner "${BASE}/tensorium-miner-linux-x86_64-sm86"
+# GPU miner example for RTX 5090 / Blackwell (sm_120)
+curl -fsSL -o tensorium-miner \
+  https://github.com/tensorium-labs/tensorium-core/releases/latest/download/tensorium-miner-linux-x86_64-sm120
 
 # Make executable and install
 chmod +x tensorium-node txmwallet tensorium-miner
@@ -241,17 +242,17 @@ txmwallet balance</pre>
       <pre>mkdir -p ~/tensorium-node
 cd ~/tensorium-node
 
-# Initialize mainnet-candidate — genesis is hardcoded, near-instant
+# Initialize mainnet — genesis is hardcoded, near-instant
 TENSORIUM_MC_STATE=~/tensorium-node/state.json \
 TENSORIUM_MC_MEMPOOL=~/tensorium-node/mempool.json \
 TENSORIUM_MC_BANS=~/tensorium-node/banlist.json \
-tensorium-node mainnet-candidate init</pre>
+tensorium-node init</pre>
 
       <h3>4.2 Sync from Seed Node</h3>
       <pre>TENSORIUM_MC_STATE=~/tensorium-node/state.json \
 TENSORIUM_MC_MEMPOOL=~/tensorium-node/mempool.json \
 TENSORIUM_MC_BANS=~/tensorium-node/banlist.json \
-tensorium-node mainnet-candidate sync seed.tensoriumlabs.com:33333</pre>
+tensorium-node sync seed.tensoriumlabs.com:33333</pre>
 
       <p>Output shows sync progress:</p>
       <pre>sync start: peer=seed.tensoriumlabs.com:33333 peer_height=150 our_height=0
@@ -266,18 +267,18 @@ sync complete: tip=150 synced=150 blocks from seed.tensoriumlabs.com:33333</pre>
 TENSORIUM_MC_STATE=~/tensorium-node/state.json \
 TENSORIUM_MC_MEMPOOL=~/tensorium-node/mempool.json \
 TENSORIUM_MC_BANS=~/tensorium-node/banlist.json \
-TENSORIUM_MC_PEERS=seed.tensoriumlabs.com:33333,seed2.tensoriumlabs.com:33333 \
-tensorium-node mainnet-candidate rpc 127.0.0.1:33332
+TENSORIUM_MC_PEERS=seed.tensoriumlabs.com:33333 \
+tensorium-node rpc 127.0.0.1:33332
 
 # Terminal 2 — P2P listener (port 33333 must be open in firewall)
 TENSORIUM_MC_STATE=~/tensorium-node/state.json \
 TENSORIUM_MC_MEMPOOL=~/tensorium-node/mempool.json \
 TENSORIUM_MC_BANS=~/tensorium-node/banlist.json \
-tensorium-node mainnet-candidate p2p-listen 0.0.0.0:33333</pre>
+tensorium-node p2p-listen 0.0.0.0:33333</pre>
 
       <p>Check your node is working:</p>
       <pre>curl -s http://localhost:33332/getblockcount
-# → {"blocks":151,"chain_id":"tensorium-mainnet-candidate-0","height":150}</pre>
+# → {"blocks":151,"chain_id":"tensorium-mainnet","height":150}</pre>
 
       <h3>4.4 Systemd Service (Auto-start on Reboot)</h3>
       <pre>sudo tee /etc/systemd/system/tensorium-rpc.service &lt;&lt;EOF
@@ -291,8 +292,8 @@ User=$(whoami)
 Environment=TENSORIUM_MC_STATE=$HOME/tensorium-node/state.json
 Environment=TENSORIUM_MC_MEMPOOL=$HOME/tensorium-node/mempool.json
 Environment=TENSORIUM_MC_BANS=$HOME/tensorium-node/banlist.json
-Environment=TENSORIUM_MC_PEERS=seed.tensoriumlabs.com:33333,seed2.tensoriumlabs.com:33333
-ExecStart=/usr/local/bin/tensorium-node mainnet-candidate rpc 127.0.0.1:33332
+Environment=TENSORIUM_MC_PEERS=seed.tensoriumlabs.com:33333
+ExecStart=/usr/local/bin/tensorium-node rpc 127.0.0.1:33332
 Restart=always
 RestartSec=10
 
@@ -311,7 +312,7 @@ User=$(whoami)
 Environment=TENSORIUM_MC_STATE=$HOME/tensorium-node/state.json
 Environment=TENSORIUM_MC_MEMPOOL=$HOME/tensorium-node/mempool.json
 Environment=TENSORIUM_MC_BANS=$HOME/tensorium-node/banlist.json
-ExecStart=/usr/local/bin/tensorium-node mainnet-candidate p2p-listen 0.0.0.0:33333
+ExecStart=/usr/local/bin/tensorium-node p2p-listen 0.0.0.0:33333
 Restart=always
 RestartSec=10
 
@@ -397,33 +398,33 @@ sudo systemctl enable --now tensorium-miner</pre>
       <h2 class="section-title"><span class="section-num">6</span> Mining Rewards</h2>
 
       <h3>6.1 Block Reward</h3>
-      <p>Every block you mine earns you <strong>11.9027 TXM</strong> (Era 1, mainnet). This reward is a coinbase transaction with your address as the output.</p>
+      <p>Every block you mine earns you <strong>7.8558 TXM</strong> (Era 1, mainnet). This reward is a coinbase transaction with your address as the output.</p>
 
       <div class="spec-grid">
         <div class="spec-item">
           <div class="spec-label">Current Reward</div>
-          <div class="spec-value">11.9027</div>
+          <div class="spec-value">7.8558</div>
           <div class="spec-sub">TXM per block (Era 1 mainnet)</div>
         </div>
         <div class="spec-item">
           <div class="spec-label">Maturity</div>
-          <div class="spec-value">100 blocks</div>
-          <div class="spec-sub">before reward is spendable (~100 min)</div>
+          <div class="spec-value">10 blocks</div>
+          <div class="spec-sub">before reward is spendable (~10 min)</div>
         </div>
         <div class="spec-item">
           <div class="spec-label">Next Halving</div>
           <div class="spec-value">Era 2</div>
-          <div class="spec-sub">at block 1,051,200 (~2 years)</div>
+          <div class="spec-sub">at block 2,102,400 (~4 years)</div>
         </div>
         <div class="spec-item">
           <div class="spec-label">Mining Supply</div>
-          <div class="spec-value">25,000,000</div>
+          <div class="spec-value">33,000,000</div>
           <div class="spec-sub">TXM available for mining</div>
         </div>
       </div>
 
       <h3>6.2 Coinbase Maturity</h3>
-      <p>On mainnet, block rewards cannot be spent until <strong>100 blocks</strong> have been built on top of the block you mined (~100 minutes at target block time).</p>
+      <p>On mainnet, block rewards cannot be spent until <strong>10 blocks</strong> have been built on top of the block you mined (~10 minutes at target block time).</p>
 
       <h3>6.3 Check Your Earnings</h3>
       <pre>export TENSORIUM_WALLET=~/tensorium-node/wallet.json
@@ -495,11 +496,11 @@ txmwallet send txm1recipient_address 100000000 /tmp/my-tx.json
 txmwallet broadcast /tmp/my-tx.json 127.0.0.1:33332</pre>
 
       <h3>7.4 Node Commands Reference</h3>
-      <pre>tensorium-node mainnet-candidate init                      # Initialize mainnet genesis block (near-instant)
-tensorium-node mainnet-candidate status                    # Show chain tip and height
-tensorium-node mainnet-candidate rpc [bind]                # Start HTTP RPC (default 127.0.0.1:33332)
-tensorium-node mainnet-candidate p2p-listen [bind]         # Start P2P server (default 0.0.0.0:33333)
-tensorium-node mainnet-candidate sync [host:port]          # Download missing blocks from a peer
+      <pre>tensorium-node init                      # Initialize mainnet genesis block (near-instant)
+tensorium-node status                    # Show chain tip and height
+tensorium-node rpc [bind]                # Start HTTP RPC (default 127.0.0.1:33332)
+tensorium-node p2p-listen [bind]         # Start P2P server (default 0.0.0.0:33333)
+tensorium-node sync [host:port]          # Download missing blocks from a peer
 tensorium-node p2p-connect &lt;host:port&gt;  # Diagnostic handshake to a peer
 tensorium-node peers                     # Print configured peers
 tensorium-node banlist                   # Show peer ban list
@@ -528,7 +529,7 @@ tensorium-miner --mode pool --pool stratum+tcp://pooltxm.tensoriumlabs.com:3333 
           Do I need a GPU to mine? <span>+</span>
         </div>
         <div class="faq-a">
-          Yes. Mainnet runs at 40-bit initial difficulty — a GPU (RTX 3000+ recommended) is required. Download <code>tensorium-miner</code> from the <a href="https://github.com/tensorium-labs/tensorium-core/releases" target="_blank">latest release</a>.
+          Yes. Mainnet runs at 42-bit initial difficulty — a GPU (RTX 3000+ recommended) is required. Download <code>tensorium-miner</code> from the <a href="https://github.com/tensorium-labs/tensorium-core/releases" target="_blank">latest release</a>.
         </div>
       </div>
 
@@ -537,7 +538,7 @@ tensorium-miner --mode pool --pool stratum+tcp://pooltxm.tensoriumlabs.com:3333 
           Why does genesis init take so long? <span>+</span>
         </div>
         <div class="faq-a">
-          The mainnet genesis is hardcoded in the binary. Running <code>tensorium-node mainnet-candidate init</code> should be near-instant. If it hangs, check you have the correct binary version (<code>v0.3.3-mainnet</code> or later).
+          The mainnet genesis is hardcoded in the binary. Running <code>tensorium-node init</code> should be near-instant. If it hangs, update to the latest mainnet v1 release.
         </div>
       </div>
 
@@ -555,7 +556,7 @@ tensorium-miner --mode pool --pool stratum+tcp://pooltxm.tensoriumlabs.com:3333 
           What is the seed node and do I need to keep it connected? <span>+</span>
         </div>
         <div class="faq-a">
-          The bootstrap seeds are <code>seed.tensoriumlabs.com:33333</code> and <code>seed2.tensoriumlabs.com:33333</code>. Use both in <code>TENSORIUM_MC_PEERS</code> for initial sync and better propagation redundancy.
+          The canonical bootstrap seed is <code>seed.tensoriumlabs.com:33333</code>. Use it in <code>TENSORIUM_MC_PEERS</code> for initial sync.
         </div>
       </div>
 
